@@ -18,7 +18,7 @@ All of the HTTP methods should work on any version of Oracle Service Cloud since
 You can use this PHP Library for basic scripting and microservices. The main features that work to date are as follows:
 
 1. [Simple configuration](#client-configuration)
-2. Running ROQL queries [1 at a time](#oscrubyqueryresults-example)
+2. Running ROQL queries [1 at a time](#osvcphpqueryresults-example)
 <!--  or [multiple queries in a set](#oscrubyqueryresultsset-example) 
 3. [Running Reports with filters](#oscrubyanalyticsreportsresults)
 4. Convenience methods for Analytics filters and setting dates
@@ -88,11 +88,11 @@ $rn_client = new OSvCPHP\Client(array(
 
 
 
-## OSCRuby::QueryResults example
+## OSvCPHP\QueryResults example
 
 This is for running one ROQL query. Whatever is allowed by the REST API (limits and sorting) is allowed with this library.
 
-OSCRuby::QueryResults only has one function: 'query', which takes an OSCRuby::Client object and string query (example below).
+OSvCPHP\QueryResults only has one function: 'query', which takes an OSvCPHP\Client string and string query (example below).
 
 ```php
 # NOTE: Make sure to put your queries WRAPPED in doublequotes("")
