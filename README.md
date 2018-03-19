@@ -35,7 +35,7 @@ You can use this PHP Library for basic scripting and microservices. The main fea
 
  Add this line to your application's Gemfile:
 
-```ruby
+```php
 gem 'osc_ruby'
 ```
 
@@ -94,7 +94,7 @@ This is for running one ROQL query. Whatever is allowed by the REST API (limits 
 
 OSCRuby::QueryResults only has one function: 'query', which takes an OSCRuby::Client object and string query (example below).
 
-```ruby
+```php
 # NOTE: Make sure to put your queries WRAPPED in doublequotes("")
 # this is because when Ruby converts the queries into a URI
 # the REST API does not like it when the queries are WRAPPED in single quotes ('')
@@ -137,7 +137,7 @@ This is for running multiple queries and assigning the results of each query to 
 
 OSCRuby::QueryResultsSet only has one function: 'query_set', which takes an OSCRuby::Client object and multiple query hashes (example below).
 
-```ruby
+```php
 # NOTE: Make sure to put your queries WRAPPED in doublequotes("")
 # Pass in each query into a hash
 	# set query: to the query you want to execute
@@ -299,7 +299,7 @@ OSCRuby::AnalyticsReportsResults only has one function: 'run', which takes an OS
 
 OSCRuby::AnalyticsReportsResults have the following properties: 'id', 'lookupName', and 'filters'. More on filters and supported datetime methods are below this OSCRuby::AnalyticsReportsResults example script.
 
-```ruby
+```php
 require 'osc_ruby'
 
 rn_client = OSCRuby::Client.new do |c|
@@ -343,7 +343,7 @@ These are under development, but these should work if you treat them like the th
 5. [operator](https://docs.oracle.com/cloud/latest/servicecs_gs/CXSVC/op-services-rest-connect-v1.4-analyticsReportResults-post.html#request-definitions-namedIDs-analyticsReports-filters-operator)
 6. [values](https://docs.oracle.com/cloud/latest/servicecs_gs/CXSVC/op-services-rest-connect-v1.4-analyticsReportResults-post.html#request-namedIDs-definitions-analyticsReports-filters-values)
 
-```ruby
+```php
 require 'osc_ruby'
 
 rn_client = OSCRuby::Client.new do |c|
@@ -400,7 +400,7 @@ end
 
 dti lets you type in a date and get it in ISO8601 format. Explicit date formatting is best.
 
-```ruby
+```php
 
 dti("January 1st, 2014") # => 2014-01-01T00:00:00-08:00  # => 1200 AM, January First of 2014
 
@@ -416,7 +416,7 @@ dti("January 1st") # => 2017-01-01T00:00:00-08:00 # => 12:00 AM, January First o
 Be careful! Sometimes the dates will not be what you expect; try to write dates as explicitly/predictably when possible.
 
 
-```ruby
+```php
 
 # EXAMPLES OF DATES NOT BEING WHAT YOU MIGHT EXPECT
 
