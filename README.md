@@ -22,14 +22,14 @@ You can use this PHP Library for basic scripting and microservices. The main fea
 3. [Running Reports with filters](#oscrubyanalyticsreportsresults)
 4. Convenience methods for Analytics filters and setting dates
 	1. ['arrf', an analytics report results filter](#arrf--analytics-report-results-filter)
-	2. ['dti', converts a date string to ISO8601 format](#dti--date-to-iso8601) 
-3. Basic CRUD Operations via HTTP Methods
+	2. ['dti', converts a date string to ISO8601 format](#dti--date-to-iso8601) -->
+2. Basic CRUD Operations via HTTP Methods
 	1. [Create => Post](#create)
-	2. [Read => Get](#read)
+<!-- 	2. [Read => Get](#read)
 	3. [Update => Patch](#update)
-	4. [Destroy => Delete](#delete)
+	4. [Destroy => Delete](#delete) -->
 
-
+<!--
 ## Installation
 
  Add this line to your application's Gemfile:
@@ -430,7 +430,7 @@ dti("01/02/2014") # => 2014-02-01T00:00:00-08:00 # => 12:00 AM, February 14th, 2
 dti("11:59PM January 1st, 2014 GMT") #=> 2017-08-01T23:59:00-07:00 #=> 11:59 PM, August 1st, 2017 Pacific Time (?)
 
 ```
-
+-->
 
 
 
@@ -443,41 +443,48 @@ dti("11:59PM January 1st, 2014 GMT") #=> 2017-08-01T23:59:00-07:00 #=> 11:59 PM,
 
 ### CREATE
 ```ruby
-#### OSCRuby::Connect.post( <client>, <url>, <json_data> )
-#### returns a NetHTTPRequest object
+#### OSvCPHP\Connect::post( <client>, <url>, <json_data> )
+#### returns an associative array
 
 # Here's how you could create a new ServiceProduct object
-# using Ruby variables, hashes(sort of like JSON), and arrays to set field information
+# using PHP variables and arrays to set field information
 
-require 'osc_ruby'
+$rn_client = new OSvCPHP\Client(array(
+	"username" => getenv("OSC_ADMIN"),		# => These are interface credentials
+	"password" => getenv("OSC_PASSWORD"),	# => store these in environmental
+	"interface" => getenv("OSC_SITE")		# => variables in your .bash_profile
+));
 
-rn_client = OSCRuby::Client.new do |c|
-	c.username = ENV['OSC_ADMIN']
-	c.password = ENV['OSC_PASSWORD']
-	c.interface = ENV['OSC_SITE']	
-end
+$new_product = array(
+	'names' => array(
+		array(
+			'labelText' => 'NEW_PRODUCT',
+			'language' => array('id' => 1)
+		)
+	),
+	'displayOrder' => 4,
+	'adminVisibleInterfaces' => array(
+		array(
+			'id' => 1
+		)
+	),
+	'endUserVisibleInterfaces' => array(
+		array(
+			'id' => 1
+		)
+	),
+);
 
-new_product = {}
-new_product['names'] = []
-new_product['names'][0] = {'labelText' => 'NEW_PRODUCT', 'language' => {'id' => 1}}
-new_product['displayOrder'] = 4
+$post_response = OSvCPHP\Connect::post($rn_client,'/serviceProducts',$new_product);
 
-new_product['adminVisibleInterfaces'] = []
-new_product['adminVisibleInterfaces'][0] = {'id' => 1}
-new_product['endUserVisibleInterfaces'] = []
-new_product['endUserVisibleInterfaces'][0] = {'id' => 1}
-
-res = OSCRuby::Connect.post(rn_client,'/serviceProducts',new_product)
-
-puts res.code # => 201
-
-puts res.body # => JSON body
+echo json_encode($post_response['body'],JSON_PRETTY_PRINT); # => 201
+echo json_encode($post_response['info'],JSON_PRETTY_PRINT); # => JSON body
 
 # callback with JSON details
 
 ```
 
-
+<!-- 
 
 
 

@@ -2,60 +2,34 @@
 
 require_once('./osvc_php.php');
 
-$rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),		# => These are interface credentials
-	"password" => getenv("OSC_PASSWORD"),	# => store these in environmental
-	"interface" => getenv("OSC_SITE"),		# => variables in your .bash_profile
-	"demo_site" => true
-));
+// $get_response = OSvCPHP\Connect::get($rn_client,'/serviceProducts?limit=3');
+// echo json_encode($get_response['body'],JSON_PRETTY_PRINT);
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-$data = array(
-
-	"primaryContact" => array(
-    	"id" => 2
-	),
-	"subject" => "FishPhone not working"
-
-);
-$post_response = OSvCPHP\Connect::post($rn_client,'/incidents',$data);
-
-echo json_encode($post_response,JSON_PRETTY_PRINT);
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-$get_response = OSvCPHP\Connect::get($rn_client,'/incidents/' . $post_response['body']->id);
+// ///////////////////////////////////////////////////////////////////////////////////////////////
+// $patch_data = array(
 
-echo json_encode($get_response,JSON_PRETTY_PRINT);
+// 	"subject" => "FishPhone not working UPDATED"
 
-echo "\n";
-echo "\n";
-echo "\n";
+// );
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-$patch_data = array(
+// $patch_response = OSvCPHP\Connect::patch($rn_client,'/incidents/' . $post_response['body']->id, $patch_data);
 
-	"subject" => "FishPhone not working UPDATED"
+// echo json_encode($patch_response,JSON_PRETTY_PRINT);
 
-);
-
-$patch_response = OSvCPHP\Connect::patch($rn_client,'/incidents/' . $post_response['body']->id, $patch_data);
-
-echo json_encode($patch_response,JSON_PRETTY_PRINT);
-
-echo "\n";
-echo "\n";
-echo "\n";
+// echo "\n";
+// echo "\n";
+// echo "\n";
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-$delete_response = OSvCPHP\Connect::delete($rn_client,'/incidents/' . $post_response['body']->id);
+// ///////////////////////////////////////////////////////////////////////////////////////////////
+// $delete_response = OSvCPHP\Connect::delete($rn_client,'/incidents/' . $post_response['body']->id);
 
-echo json_encode($delete_response,JSON_PRETTY_PRINT);
+// echo json_encode($delete_response,JSON_PRETTY_PRINT);
 
-echo "\n";
-echo "\n";
-echo "\n";
+// echo "\n";
+// echo "\n";
+// echo "\n";
