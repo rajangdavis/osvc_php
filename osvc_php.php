@@ -75,6 +75,7 @@ class Connect
 			"Content-Type: application\/json",
 			"Authorization: Basic " . $client_hash->config->login
 		);
+		if($client_hash->config->suppress_rules) array_push($headers,"OSvC-CREST-Suppress-All : true");
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, !$client_hash->config->no_ssl_verify); // Must ignore SSL issues
