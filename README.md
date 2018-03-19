@@ -9,9 +9,7 @@ If you get SSL Errors (you probably will), follow [this link for instructions on
    
 ## Compatibility
 
-This PHP package was tested against Oracle Service Cloud November 2016 using Ruby version 2.1.2p95 (2014-05-08 revision 45877) [x86_64-darwin13.0] between December 2016 and June 2017.
-
-It is now being tested against Oracle Service Cloud May 2017 using PHP 7.2.1; Travis CI and Code Climate to be set up soon.
+This PHP library tested against Oracle Service Cloud May 2017 using PHP 7.2.1; Travis CI and Code Climate to be set up soon.
 
 All of the HTTP methods should work on any version of Oracle Service Cloud since version May 2015; however, there maybe some issues with querying items on any version before May 2016. This is because ROQL queries were not exposed via the REST API until May 2016.
 
@@ -66,9 +64,9 @@ This is helpful if you need to interact with multiple interfaces or set differen
 require_once('./osvc_php.php');
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),		# => These are interface credentials
-	"password" => getenv("OSC_PASSWORD"),	# => store these in environmental
-	"interface" => getenv("OSC_SITE"),		# => variables in your .bash_profile
+	"username" => getenv("OSC_ADMIN"),			# => These are interface credentials
+	"password" => getenv("OSC_PASSWORD"),			# => store these in environmental
+	"interface" => getenv("OSC_SITE"),			# => variables in your .bash_profile
 
 	### optional configuration
 	# Turns off SSL verification; don't use in production
@@ -81,7 +79,7 @@ $rn_client = new OSvCPHP\Client(array(
 	"suppress_rules" => true,				# => Defaults to false. 
 	
 	# Use 'rightnowdemo' namespace instead of 'custhelp'
-	"demo_site" => true						# => Defaults to false. 
+	"demo_site" => true					# => Defaults to false. 
 ));
 ```
 <!-- 
