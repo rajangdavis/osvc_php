@@ -442,7 +442,7 @@ dti("11:59PM January 1st, 2014 GMT") #=> 2017-08-01T23:59:00-07:00 #=> 11:59 PM,
 ## Basic CRUD operations
 
 ### CREATE
-```ruby
+```php
 #### OSvCPHP\Connect::post( <client>, <url>, <json_data> )
 #### returns an associative array
 
@@ -451,7 +451,7 @@ dti("11:59PM January 1st, 2014 GMT") #=> 2017-08-01T23:59:00-07:00 #=> 11:59 PM,
 
 $rn_client = new OSvCPHP\Client(array(
     "username" => getenv("OSC_ADMIN"),		# => These are interface credentials
-    "password" => getenv("OSC_PASSWORD"),		# => store these in environmental
+    "password" => getenv("OSC_PASSWORD"),	# => store these in environmental
     "interface" => getenv("OSC_SITE")		# => variables in your .bash_profile
 ));
 
@@ -492,9 +492,9 @@ echo json_encode($post_response['info'],JSON_PRETTY_PRINT); # => cURL info
 require_once('./osvc_php.php');
 
 $rn_client = new OSvCPHP\Client(array(
-    "username" => getenv("OSC_ADMIN"),		# => These are interface credentials
-    "password" => getenv("OSC_PASSWORD"),	# => store these in environmental
-    "interface" => getenv("OSC_SITE")		# => variables in your .bash_profile
+    "username" => getenv("OSC_ADMIN"),	
+    "password" => getenv("OSC_PASSWORD"),
+    "interface" => getenv("OSC_SITE")	
 ));
 
 $get_response = OSvCPHP\Connect::get($rn_client,'/serviceProducts?limit=3');
@@ -546,56 +546,58 @@ echo json_encode($get_response['body'],JSON_PRETTY_PRINT);
 
 
 
-<!--
+
 ### UPDATE
-```ruby
-#### OSCRuby::Connect.patch( <client>, <url>, <json_data> )
-#### returns a NetHTTPRequest object
+```php
+#### OSvCPHP\Connect::patch( <client>, <url>, <json_data> )
+#### returns an associative array
 # Here's how you could update the previously created ServiceProduct object
-# using Ruby variables, arrays, hashes, 
-# and symbols (read only string values, eg :example)
+# using PHP variables and arrays
 # to set field information
 
-require 'osc_ruby'
+require_once('./osvc_php.php');
 
-rn_client = OSCRuby::Client.new do |c|
-	c.username = ENV['OSC_ADMIN']
-	c.password = ENV['OSC_PASSWORD']
-	c.interface = ENV['OSC_SITE']	
-end
+$rn_client = new OSvCPHP\Client(array(
+    "username" => getenv("OSC_ADMIN"),		# => These are interface credentials
+    "password" => getenv("OSC_PASSWORD"),	# => store these in environmental
+    "interface" => getenv("OSC_SITE"),		# => variables in your .bash_profile
+    "demo_site" => true
+));
 
+$prod_info_to_change = array(
+    "names" => array(
+        "labelText" => "PRODUCT-TEST-updated",
+            "language" => array(
+            "id" => 1
+        )
+    ),
+    "displayOrder" =>  4,
+    "adminVisibleInterfaces" => array(
+    	array(
+    		"id" => 1
+    	)
+    ),
+    "endUserVisibleInterfaces" => array(
+    	array(
+    		"id" => 1
+    	)
+    ),
+);
 
-names = []
+$updated_product = OSvCPHP\Connect::patch($rn_client,"serviceProducts/56",$prod_info_to_change); 
 
-names[0] = {:labelText => 'PRODUCT-TEST-updated', :language => {:id => 1}}
-displayOrder = {:id => 4}
-
-admin_user_visible_interfaces = []
-admin_user_visible_interfaces[0] = {:id => 1}
-
-end_user_visible_interfaces = []
-end_user_visible_interfaces[0] = {:id => 1}
-
-prod_info_to_change = []
-prod_info_to_change[0] = {:names => names, 
-			              :adminVisibleInterfaces => admin_user_visible_interfaces,
-			              :endUserVisibleInterfaces => end_user_visible_interfaces}
-
-updated_product = OSCRuby::Connect.patch(rn_client,"serviceProducts/56",prod_info_to_change[0]) 
-
-puts updated_product.code # => "200"
-
-puts updated_product.body # => "" if successful...
+echo json_encode($updated_product['info'],JSON_PRETTY_PRINT); # => cURL info
+echo json_encode($updated_product['body'],JSON_PRETTY_PRINT); # => null if successful
 
 ```
 
 
 
 
-
+<!--
 
 ### DELETE
-```ruby
+```php
 #### OSCRuby::Connect.delete( <client>, <url> )
 #### returns a NetHTTPRequest object
 # Here's how you could delete the previously updated ServiceProduct object
