@@ -450,109 +450,62 @@ dti("11:59PM January 1st, 2014 GMT") #=> 2017-08-01T23:59:00-07:00 #=> 11:59 PM,
 # using PHP variables and arrays to set field information
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),		# => These are interface credentials
-	"password" => getenv("OSC_PASSWORD"),	# => store these in environmental
-	"interface" => getenv("OSC_SITE")		# => variables in your .bash_profile
+    "username" => getenv("OSC_ADMIN"),		# => These are interface credentials
+    "password" => getenv("OSC_PASSWORD"),		# => store these in environmental
+    "interface" => getenv("OSC_SITE")		# => variables in your .bash_profile
 ));
 
 $new_product = array(
-	'names' => array(
-		array(
-			'labelText' => 'NEW_PRODUCT',
-			'language' => array('id' => 1)
-		)
-	),
-	'displayOrder' => 4,
-	'adminVisibleInterfaces' => array(
-		array(
-			'id' => 1
-		)
-	),
-	'endUserVisibleInterfaces' => array(
-		array(
-			'id' => 1
-		)
-	),
+    'names' => array(
+        array(
+            'labelText' => 'NEW_PRODUCT',
+            'language' => array('id' => 1)
+        )
+    ),
+    'displayOrder' => 4,
+    'adminVisibleInterfaces' => array(
+        array(
+            'id' => 1
+        )
+    ),
+    'endUserVisibleInterfaces' => array(
+        array(
+            'id' => 1
+        )
+    ),
 );
 
 $post_response = OSvCPHP\Connect::post($rn_client,'/serviceProducts',$new_product);
 
-echo json_encode($post_response['body'],JSON_PRETTY_PRINT); # => 201
-echo json_encode($post_response['info'],JSON_PRETTY_PRINT); # => JSON body
-
-# callback with JSON details
+echo json_encode($post_response['body'],JSON_PRETTY_PRINT); # => JSON body
+echo json_encode($post_response['info'],JSON_PRETTY_PRINT); # => cURL info
 
 ```
 
-<!-- 
-
-
-
-
 
 ### READ
-```ruby
+```php
 #### OSCRuby::Connect.get( <client>, optional (<url>/<id>/...<params>) )
 #### returns a NetHTTPRequest object
 # Here's how you could get a list of ServiceProducts
 
-require 'osc_ruby'
+require_once('./osvc_php.php');
 
-rn_client = OSCRuby::Client.new do |c|
-	c.username = ENV['OSC_ADMIN']
-	c.password = ENV['OSC_PASSWORD']
-	c.interface = ENV['OSC_SITE']	
-end
+$rn_client = new OSvCPHP\Client(array(
+    "username" => getenv("OSC_ADMIN"),		# => These are interface credentials
+    "password" => getenv("OSC_PASSWORD"),		# => store these in environmental
+    "interface" => getenv("OSC_SITE")		# => variables in your .bash_profile
+));
 
-res = OSCRuby::Connect.get(rn_client,'/serviceProducts?limit=3')
-
-puts JSON.pretty_generate(res.body)
-
-#{
-#    "items": [
-#        {
-#            "id": 2,
-#            "lookupName": "Maestro Smart Thermostat",
-#            "links": [
-#                {
-#                    "rel": "canonical",
-#                    "href": "https://<OSC_SITE>.rightnowdemo.com/services/rest/connect/v1.3/serviceProducts/2"
-#                }
-#            ]
-#        },
-#        {
-#            "id": 6,
-#            "lookupName": "Home Security",
-#            "links": [
-#                {
-#                    "rel": "canonical",
-#                    "href": "https://<OSC_SITE>.rightnowdemo.com/services/rest/connect/v1.3/serviceProducts/6"
-#                }
-#            ]
-#        },
-#        {
-#            "id": 7,
-#            "lookupName": "Hubs",
-#            "links": [
-#                {
-#                    "rel": "canonical",
-#                    "href": "https://<OSC_SITE>.rightnowdemo.com/services/rest/connect/v1.3/serviceProducts/7"
-#                }
-#            ]
-#        }
-#    ],
-#    "hasMore": true,
-#
-#	 ... and everything else ... 
-#	
-#}
+$get_response = OSvCPHP\Connect::get($rn_client,'/serviceProducts?limit=3');
+echo json_encode($get_response['body'],JSON_PRETTY_PRINT);
 ```
 
 
 
 
 
-
+<!--
 ### UPDATE
 ```ruby
 #### OSCRuby::Connect.patch( <client>, <url>, <json_data> )

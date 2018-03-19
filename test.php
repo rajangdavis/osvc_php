@@ -2,8 +2,7 @@
 
 require_once('./osvc_php.php');
 
-// $get_response = OSvCPHP\Connect::get($rn_client,'/serviceProducts?limit=3');
-// echo json_encode($get_response['body'],JSON_PRETTY_PRINT);
+
 
 
 
