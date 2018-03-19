@@ -3,9 +3,9 @@
 require_once('./osvc_php.php');
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
+	"username" => getenv("OSC_ADMIN"),		# => These are interface credentials
+	"password" => getenv("OSC_PASSWORD"),	# => store these in environmental
+	"interface" => getenv("OSC_SITE"),		# => variables in your .bash_profile
 	"demo_site" => true
 ));
 
