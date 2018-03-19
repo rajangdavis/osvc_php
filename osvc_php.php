@@ -22,7 +22,7 @@ class Config
 	private function clientUrl($config_hash){
 		$base_url = "https://" . $config_hash['interface'] . ".";
 
-		if($config_hash['demo_site'] === true){
+		if(isset($config_hash['demo_site']) && $config_hash['demo_site'] === true){
 			$base_url .= "rightnowdemo.com/services/rest/connect/";
 		}else{
 			$base_url .= "custhelp.com/services/rest/connect/";

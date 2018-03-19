@@ -485,20 +485,61 @@ echo json_encode($post_response['info'],JSON_PRETTY_PRINT); # => cURL info
 
 ### READ
 ```php
-#### OSCRuby::Connect.get( <client>, optional (<url>/<id>/...<params>) )
-#### returns a NetHTTPRequest object
+#### OSvCPHP\Connect::get( <client>, optional (<url>/<id>/...<params>) )
+#### returns an associative array
 # Here's how you could get a list of ServiceProducts
 
 require_once('./osvc_php.php');
 
 $rn_client = new OSvCPHP\Client(array(
     "username" => getenv("OSC_ADMIN"),		# => These are interface credentials
-    "password" => getenv("OSC_PASSWORD"),		# => store these in environmental
+    "password" => getenv("OSC_PASSWORD"),	# => store these in environmental
     "interface" => getenv("OSC_SITE")		# => variables in your .bash_profile
 ));
 
 $get_response = OSvCPHP\Connect::get($rn_client,'/serviceProducts?limit=3');
 echo json_encode($get_response['body'],JSON_PRETTY_PRINT);
+
+#{
+#    "items": [
+#        {
+#            "id": 2,
+#            "lookupName": "Maestro Smart Thermostat",
+#            "links": [
+#                {
+#                    "rel": "canonical",
+#                    "href": "https:\/\/opn-eventus4.rightnowdemo.com\/services\/rest\/connect\/v1.3\/serviceProducts\/2"
+#                }
+#            ]
+#        },
+#        {
+#            "id": 6,
+#            "lookupName": "Home Security",
+#            "links": [
+#                {
+#                    "rel": "canonical",
+#                    "href": "https:\/\/opn-eventus4.rightnowdemo.com\/services\/rest\/connect\/v1.3\/serviceProducts\/6"
+#                }
+#            ]
+#        },
+#        {
+#            "id": 7,
+#            "lookupName": "Hubs",
+#            "links": [
+#                {
+#                    "rel": "canonical",
+#                    "href": "https:\/\/opn-eventus4.rightnowdemo.com\/services\/rest\/connect\/v1.3\/serviceProducts\/7"
+#                }
+#            ]
+#        }
+#    ],
+#    "hasMore": true,
+#
+#	 ... and everything else ... 
+#	
+#}
+
+
 ```
 
 
