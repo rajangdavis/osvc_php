@@ -508,7 +508,7 @@ echo json_encode($get_response['body'],JSON_PRETTY_PRINT);
 #            "links": [
 #                {
 #                    "rel": "canonical",
-#                    "href": "https:\/\/opn-eventus4.rightnowdemo.com\/services\/rest\/connect\/v1.3\/serviceProducts\/2"
+#                    "href": "https:\/\/<OSC_SITE>.rightnowdemo.com\/services\/rest\/connect\/v1.3\/serviceProducts\/2"
 #                }
 #            ]
 #        },
@@ -518,7 +518,7 @@ echo json_encode($get_response['body'],JSON_PRETTY_PRINT);
 #            "links": [
 #                {
 #                    "rel": "canonical",
-#                    "href": "https:\/\/opn-eventus4.rightnowdemo.com\/services\/rest\/connect\/v1.3\/serviceProducts\/6"
+#                    "href": "https:\/\/<OSC_SITE>.rightnowdemo.com\/services\/rest\/connect\/v1.3\/serviceProducts\/6"
 #                }
 #            ]
 #        },
@@ -528,7 +528,7 @@ echo json_encode($get_response['body'],JSON_PRETTY_PRINT);
 #            "links": [
 #                {
 #                    "rel": "canonical",
-#                    "href": "https:\/\/opn-eventus4.rightnowdemo.com\/services\/rest\/connect\/v1.3\/serviceProducts\/7"
+#                    "href": "https:\/\/<OSC_SITE>.rightnowdemo.com\/services\/rest\/connect\/v1.3\/serviceProducts\/7"
 #                }
 #            ]
 #        }
