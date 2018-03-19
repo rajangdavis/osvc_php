@@ -25,9 +25,9 @@ You can use this PHP Library for basic scripting and microservices. The main fea
 	2. ['dti', converts a date string to ISO8601 format](#dti--date-to-iso8601) -->
 2. Basic CRUD Operations via HTTP Methods
 	1. [Create => Post](#create)
-<!-- 	2. [Read => Get](#read)
+	2. [Read => Get](#read)
 	3. [Update => Patch](#update)
-	4. [Destroy => Delete](#delete) -->
+	4. [Destroy => Delete](#delete)
 
 <!--
 ## Installation
@@ -558,10 +558,9 @@ echo json_encode($get_response['body'],JSON_PRETTY_PRINT);
 require_once('./osvc_php.php');
 
 $rn_client = new OSvCPHP\Client(array(
-    "username" => getenv("OSC_ADMIN"),		# => These are interface credentials
-    "password" => getenv("OSC_PASSWORD"),	# => store these in environmental
-    "interface" => getenv("OSC_SITE"),		# => variables in your .bash_profile
-    "demo_site" => true
+    "username" => getenv("OSC_ADMIN"),	
+    "password" => getenv("OSC_PASSWORD"),
+    "interface" => getenv("OSC_SITE")	
 ));
 
 $prod_info_to_change = array(
@@ -592,36 +591,24 @@ echo json_encode($updated_product['body'],JSON_PRETTY_PRINT); # => null if succe
 ```
 
 
-
-
-<!--
-
 ### DELETE
 ```php
-#### OSCRuby::Connect.delete( <client>, <url> )
-#### returns a NetHTTPRequest object
+#### OSvCPHP\Connect::delete( <client>, <url> )
+#### returns an associative array
 # Here's how you could delete the previously updated ServiceProduct object
-# using the OSCRuby::QueryResults 
-# and OSCRuby::Connect classes
+# and OSvCPHP\Connect classes
 
-require 'osc_ruby'
+require_once('./osvc_php.php');
 
-rn_client = OSCRuby::Client.new do |c|
-	c.username = ENV['OSC_ADMIN']
-	c.password = ENV['OSC_PASSWORD']
-	c.interface = ENV['OSC_SITE']	
-end
+$rn_client = new OSvCPHP\Client(array(
+    "username" => getenv("OSC_ADMIN"),	
+    "password" => getenv("OSC_PASSWORD"),
+    "interface" => getenv("OSC_SITE")
+));
 
-q = OSCRuby::QueryResults.new
-query = "select id from serviceproducts where lookupname = 'PRODUCT-TEST-updated';"
+$delete_response = OSvCPHP\Connect::delete($rn_client,'/serviceProducts/233');
 
-product_test_updated = q.query(rn_client,resource) # => returns array of results
+echo json_encode($updated_product['info'],JSON_PRETTY_PRINT); # => cURL info
+echo json_encode($updated_product['body'],JSON_PRETTY_PRINT); # => null if successful
 
-test = OSCRuby::Connect.delete(rn_client,"serviceProducts/#{product_test_updated[0]['id']}")
-
-puts updated_product.code # => "200"
-
-puts updated_product.body # => "" if successful...
-
-
-``` -->
+```
