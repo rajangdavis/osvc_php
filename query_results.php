@@ -9,8 +9,20 @@ $rn_client = new OSvCPHP\Client(array(
 	"demo_site" => true
 ));
 
-$query = "select * from answers WHERE ID > 100 LIMIT 4";
+$query_arr = array(
+	array(
+		"key" => "incidents",
+		"query" => "SELECT * FROM incidents LIMIT 3"
+	),
+	array(
+		"key" => "answers",
+		"query" => "SELECT * FROM answers LIMIT 3"
+	)
+);
 
-$q = new OSvCPHP\QueryResults;
+$mq = new OSvCPHP\QueryResultsSet;
 
-$q->query($rn_client,$query,true);
+$results_object = $mq->query_set($rn_client,$query_arr);
+
+echo json_encode($results_object->incidents,JSON_PRETTY_PRINT);
+echo json_encode($results_object->answers,JSON_PRETTY_PRINT);

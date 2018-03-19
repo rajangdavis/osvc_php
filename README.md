@@ -9,10 +9,9 @@ If you get SSL Errors (you probably will), follow [this link for instructions on
    
 ## Compatibility
 
-This PHP library tested against Oracle Service Cloud May 2017 using PHP 7.2.1; Travis CI and Code Climate to be set up soon.
+This PHP library tested against Oracle Service Cloud May 2017 using PHP 7.2.1. I _might_ set up Travis CI and Code Climate, it just depends if I find it worth my time.
 
 All of the HTTP methods should work on any version of Oracle Service Cloud since version May 2015; however, there maybe some issues with querying items on any version before May 2016. This is because ROQL queries were not exposed via the REST API until May 2016.
-
 
 ## Use Cases
 You can use this PHP Library for basic scripting and microservices. The main features that work to date are as follows:
@@ -103,7 +102,6 @@ OSvCPHP\QueryResults only has one function: 'query', which takes an OSvCPHP\Clie
 # "parent is null and lookupName!='Unsure'" => great!
 # 'parent is null and lookupName!="Unsure"' => don't do this
 # it will spit back an error from the REST API!
-
 
 require_once('./osvc_php.php');
 

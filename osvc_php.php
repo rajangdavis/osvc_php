@@ -14,7 +14,6 @@ class Client
 
 }
 
-
 class Config
 {
 	public $no_ssl_verify,$suppress_rules,$login;
@@ -76,12 +75,13 @@ class Connect
 		$headers = array(
 			"Content-Type: application/json",
 			"Authorization: Basic " . $client_hash->config->login,
-			"Connection: Keep-Alive"
+			"Connection: Keep-Alive",
+			"Keep-Alive: timeout=5, max=1000"
 		);
 		if($client_hash->config->suppress_rules) array_push($headers,"OSvC-CREST-Suppress-All : true");
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, !$client_hash->config->no_ssl_verify); // Must ignore SSL issues
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, !$client_hash->config->no_ssl_verify);
 		curl_setopt($curl, CURLOPT_POST, ($method == "POST")); 
 		if (($method == "POST" || "PATCH") && !is_null($data)) curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
 		if ($method == "PATCH"){
@@ -118,7 +118,7 @@ class Normalize
 		return self::check_for_items_and_rows($results_array);
 	}
 
-	static function iterate_through_rows($item)
+	private static function iterate_through_rows($item)
 	{
 		$results_array = array();
 		foreach ($item->rows as $rowIndex => $row) {
@@ -131,7 +131,7 @@ class Normalize
 		return $results_array;
 	}
 
-	static function results_adjustment($final_arr)
+	private static function results_adjustment($final_arr)
 	{
 		if(sizeof($final_arr) == 1 && gettype($final_arr) == "array" ){
 			return $final_arr[0];
@@ -140,7 +140,7 @@ class Normalize
 		}
 	}
 
-	static function check_for_items_and_rows($results_array)
+	private static function check_for_items_and_rows($results_array)
 	{
 
 		if(isset($results_array) && sizeof($results_array) == 1){
@@ -171,11 +171,44 @@ class QueryResults
 	}
 }
 
-// class QueryResultsSet
-// {
-// 	public function query_set($client,$query)
-// 	{
-// 		$get_response = OSvCPHP\Connect::get($client,'queryResults?query=' . rawurlencode($query));
-// 		return Normalize::results_to_array($get_response);
-// 	}
-// }
+class QueryResultsSet
+{
+
+	public function query_set($client,$query_arr)
+	{
+		$key_and_query_maps = self::parse_queries($query_arr);
+		$keys = $key_and_query_maps[0];
+		$queries = $key_and_query_maps[1];
+		$joined_query = implode(";", $queries);
+		$q = new OSvCPHP\QueryResults;
+		$results = $q->query($client,$joined_query);
+		return self::match_results_to_keys($keys,$results);
+	}
+
+	private static function match_results_to_keys($keys,$results)
+	{
+		$results_object = array();
+		foreach ($keys as $index => $key) {
+			$results_object[$key] = $results[$index];
+		}
+		return (object)$results_object;
+	}
+
+	private static function parse_queries($query_arr)
+	{
+		$queries_arr = [];
+		$key_map = [];
+
+		foreach ($query_arr as $value) {
+			array_push($queries_arr, $value['query']);
+			array_push($key_map, $value['key']);
+		}
+		return array($key_map,$queries_arr);
+	}
+
+}
+
+class AnalyticsReport
+{
+
+}
