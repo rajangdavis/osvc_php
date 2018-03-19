@@ -69,11 +69,14 @@ class Connect
 	}
 
 	private static function curlGeneric($client_hash,$resource_url, $method = "GET",$data = null){
+
+		$resource_url_final = isset($resource_url) ? rawurlencode($resource_url) : "";
 		$url = $client_hash->config->base_url . $resource_url;
 		$curl = curl_init();
 		$headers = array(
-			"Content-Type: application\/json",
-			"Authorization: Basic " . $client_hash->config->login
+			"Content-Type: application/json",
+			"Authorization: Basic " . $client_hash->config->login,
+			"Connection: Keep-Alive"
 		);
 		if($client_hash->config->suppress_rules) array_push($headers,"OSvC-CREST-Suppress-All : true");
 		curl_setopt($curl, CURLOPT_URL, $url);
@@ -87,19 +90,92 @@ class Connect
 			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
 		}
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+		$body = json_decode(curl_exec($curl));
+		$info = curl_getinfo($curl);
+		curl_close($curl);
 		return array(
-			'body' => json_decode(curl_exec($curl)),
-			'info'=> curl_getinfo($curl)
+			'body' => $body,
+			'info'=> $info
 		);
+	}
+}
+
+class Normalize
+{
+	static function results_to_array($response_object)
+	{
+
+		if(!in_array($response_object['info']['http_code'], array(200,201))){
+			return $response_object;
+		}else{
+			if($response_object['body']->items){
+				$results_array = $response_object['body']->items;
+			}else if($response_object['body']->columnNames){
+				$results_array = $response_object['body'];
+			}
+		}
+
+		return self::check_for_items_and_rows($results_array);
+	}
+
+	static function iterate_through_rows($item)
+	{
+		$results_array = array();
+		foreach ($item->rows as $rowIndex => $row) {
+			$result_hash = array();
+			foreach ($item->columnNames as $columnIndex => $column) {
+				$result_hash[$column] = $row[$columnIndex];
+			};
+			array_push($results_array, $result_hash);
+		}
+		return $results_array;
+	}
+
+	static function results_adjustment($final_arr)
+	{
+		if(sizeof($final_arr) == 1 && gettype($final_arr) == "array" ){
+			return $final_arr[0];
+		}else{
+			return $final_arr;
+		}
+	}
+
+	static function check_for_items_and_rows($results_array)
+	{
+
+		if(isset($results_array) && sizeof($results_array) == 1){
+			return self::iterate_through_rows($results_array[0]);
+		}else if(isset($results_array) && sizeof($results_array) > 1){
+			$results = array();
+			foreach ($results_array as $item) {
+				array_push($results, self::iterate_through_rows($item));
+			}
+			return self::results_adjustment($results);
+		}else{
+			return $results_array;
+		}
 	}
 }
 
 
 class QueryResults
 {
-	public function query($client,$query)
+	public function query($client,$query,$return_json = false)
 	{
-
-
+		$get_response = OSvCPHP\Connect::get($client,'queryResults?query=' . rawurlencode($query));
+		if($return_json == true){
+			echo json_encode(Normalize::results_to_array($get_response),JSON_PRETTY_PRINT);
+		}else{
+			return Normalize::results_to_array($get_response);
+		}
 	}
 }
+
+// class QueryResultsSet
+// {
+// 	public function query_set($client,$query)
+// 	{
+// 		$get_response = OSvCPHP\Connect::get($client,'queryResults?query=' . rawurlencode($query));
+// 		return Normalize::results_to_array($get_response);
+// 	}
+// }

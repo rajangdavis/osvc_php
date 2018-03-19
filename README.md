@@ -18,12 +18,13 @@ All of the HTTP methods should work on any version of Oracle Service Cloud since
 You can use this PHP Library for basic scripting and microservices. The main features that work to date are as follows:
 
 1. [Simple configuration](#client-configuration)
-<!-- 2. Running ROQL queries [either 1 at a time](#oscrubyqueryresults-example) or [multiple queries in a set](#oscrubyqueryresultsset-example) 
+2. Running ROQL queries [1 at a time](#oscrubyqueryresults-example)
+<!--  or [multiple queries in a set](#oscrubyqueryresultsset-example) 
 3. [Running Reports with filters](#oscrubyanalyticsreportsresults)
 4. Convenience methods for Analytics filters and setting dates
 	1. ['arrf', an analytics report results filter](#arrf--analytics-report-results-filter)
 	2. ['dti', converts a date string to ISO8601 format](#dti--date-to-iso8601) -->
-2. Basic CRUD Operations via HTTP Methods
+3. Basic CRUD Operations via HTTP Methods
 	1. [Create => Post](#create)
 	2. [Read => Get](#read)
 	3. [Update => Patch](#update)
@@ -82,7 +83,7 @@ $rn_client = new OSvCPHP\Client(array(
 	"demo_site" => true					# => Defaults to false. 
 ));
 ```
-<!-- 
+
 
 
 
@@ -103,24 +104,23 @@ OSCRuby::QueryResults only has one function: 'query', which takes an OSCRuby::Cl
 # 'parent is null and lookupName!="Unsure"' => don't do this
 # it will spit back an error from the REST API!
 
-require 'osc_ruby'
 
-rn_client = OSCRuby::Client.new do |c|
-	c.username = ENV['OSC_ADMIN']
-	c.password = ENV['OSC_PASSWORD']
-	c.interface = ENV['OSC_SITE']	
-end
+require_once('./osvc_php.php');
 
-q = OSCRuby::QueryResults.new
+$rn_client = new OSvCPHP\Client(array(
+    "username" => getenv("OSC_ADMIN"),
+    "password" => getenv("OSC_PASSWORD"),
+    "interface" => getenv("OSC_SITE")
+));
 
-query = "select * from answers where ID = 1557"
+$query = "select * from answers where ID = 1557";
 
-results = q.query(rn_client,query) # => will return an array of results
+$q = new OSvCPHP\QueryResults;
 
-puts results[0] # => "{'id':1557,'name':...}"
+$q->query($rn_client,$query,true); # => "[{'id':1557,'name':...}]"
 
 ```
-
+<!-- 
 
 
 
@@ -446,13 +446,15 @@ dti("11:59PM January 1st, 2014 GMT") #=> 2017-08-01T23:59:00-07:00 #=> 11:59 PM,
 #### OSvCPHP\Connect::post( <client>, <url>, <json_data> )
 #### returns an associative array
 
+require_once('./osvc_php.php');
+
 # Here's how you could create a new ServiceProduct object
 # using PHP variables and arrays to set field information
 
 $rn_client = new OSvCPHP\Client(array(
-    "username" => getenv("OSC_ADMIN"),		# => These are interface credentials
-    "password" => getenv("OSC_PASSWORD"),	# => store these in environmental
-    "interface" => getenv("OSC_SITE")		# => variables in your .bash_profile
+    "username" => getenv("OSC_ADMIN"),	
+    "password" => getenv("OSC_PASSWORD"),
+    "interface" => getenv("OSC_SITE")	
 ));
 
 $new_product = array(
