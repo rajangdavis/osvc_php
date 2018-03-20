@@ -18,7 +18,7 @@ You can use this PHP Library for basic scripting and microservices. The main fea
 
 1. [Simple configuration](#client-configuration)
 2. Running ROQL queries [1 at a time](#osvcphpqueryresults-example)
-or [multiple queries in a set](#oscrubyqueryresultsset-example) 
+or [multiple queries in a set](#osvcphpqueryresultsset-example) 
 <!--  
 3. [Running Reports with filters](#oscrubyanalyticsreportsresults)
 4. Convenience methods for Analytics filters and setting dates
@@ -122,11 +122,11 @@ $q->query($rn_client,$query,true); # => "[{'id':1557,'name':...}]"
 
 
 
-## OSCRuby::QueryResultsSet example
+## OSvCPHP\QueryResultsSet example
 
 This is for running multiple queries and assigning the results of each query to a key for further manipulation.
 
-OSCRuby::QueryResultsSet only has one function: 'query_set', which takes an OSCRuby::Client object and multiple query hashes (example below).
+OSvCPHP\QueryResultsSet only has one function: 'query_set', which takes an OSvCPHP\Client object and multiple query associative arrays (example below).
 
 ```php
 # NOTE: Make sure to put your queries WRAPPED in doublequotes("")
