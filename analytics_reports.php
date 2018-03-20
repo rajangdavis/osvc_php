@@ -9,7 +9,9 @@ $rn_client = new OSvCPHP\Client(array(
 	"demo_site" => true
 ));
 
-$last_updated = new OSvCPHP\AnalyticsReportResults(array("lookupName" => "Last Updated By Status"));
+$last_updated = new OSvCPHP\AnalyticsReportResults(
+	array("lookupName" => "Last Updated By Status")
+);
 
 $results = $last_updated->run($rn_client);
 echo json_encode($results,JSON_PRETTY_PRINT);

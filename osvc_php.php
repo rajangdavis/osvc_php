@@ -243,20 +243,30 @@ namespace OSvCPHP{
 			$post_response = OSvCPHP\Connect::post($client,'analyticsReportResults',$json_data);
 			return Normalize::results_to_array($post_response);		
 		}
+	}
+
+	// Create Validations for various checks
+	// prevent breaking things before preflight
+	class Validations
+	{
+
 	}	
 }
 
 // Convenience Methods
-
 namespace{
-	// Create convenience functions
-	function dti($date)
-	{
-		return $date;
-	}
 
-	function arrf($filter_array)
-	{
-		return $filter_array;
+	// Create convenience functions
+	if(!function_exists("dti")){
+		function dti($date)
+		{
+			return $date;
+		}
+	}
+	if(!function_exists('arrf')){	
+		function arrf($filter_array)
+		{
+			return $filter_array;
+		}
 	}
 }

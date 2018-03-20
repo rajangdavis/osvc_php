@@ -2,8 +2,6 @@
 
 require_once('./osvc_php.php');
 
-// $GLOBALS["OSvCPHP_DEBUG"] = true;
-
 $rn_client = new OSvCPHP\Client(array(
 	"username" => getenv("OSC_ADMIN"),
 	"password" => getenv("OSC_PASSWORD"),
