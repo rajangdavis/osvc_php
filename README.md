@@ -345,13 +345,13 @@ echo json_encode($results_object->answers,JSON_PRETTY_PRINT);
 ```
 
 
-## OSCRuby::AnalyticsReportsResults
+## OSvCPHP\AnalyticsReportsResults
 
 You can create a new instance either by the report 'id' or 'lookupName'.
 
-OSCRuby::AnalyticsReportsResults only has one function: 'run', which takes an OSCRuby::Client object.
+OSvCPHP\AnalyticsReportsResults only has one function: 'run', which takes an OSvCPHP\Client object.
 
-OSCRuby::AnalyticsReportsResults have the following properties: 'id', 'lookupName', and 'filters'. More on filters and supported datetime methods are below this OSCRuby::AnalyticsReportsResults example script.
+OSvCPHP\AnalyticsReportsResults have the following properties: 'id', 'lookupName', and 'filters'. More on filters and supported datetime methods are below this OSvCPHP\AnalyticsReportsResults example script.
 
 ```php
 require_once('./osvc_php.php');
@@ -389,7 +389,7 @@ echo json_encode($results,JSON_PRETTY_PRINT);
 
 ### 'arrf' => analytics report results filter
 
-'arrf' lets you set filters for an OSCRuby::AnalyticsReportsResults Object.
+'arrf' lets you set filters for an OSvCPHP\AnalyticsReportsResults Object.
 
 You can set the following keys:
 1. name => The filter name
