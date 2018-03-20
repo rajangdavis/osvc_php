@@ -19,8 +19,8 @@ You can use this PHP Library for basic scripting and microservices. The main fea
 1. [Simple configuration](#client-configuration)
 2. Running ROQL queries [1 at a time](#osvcphpqueryresults-example)
 or [multiple queries in a set](#osvcphpqueryresultsset-example) 
+3. [Running Reports](#osvcphpanalyticsreportsresults)
 <!--  
-3. [Running Reports with filters](#oscrubyanalyticsreportsresults)
 4. Convenience methods for Analytics filters and setting dates
 	1. ['arrf', an analytics report results filter](#arrf--analytics-report-results-filter)
 	2. ['dti', converts a date string to ISO8601 format](#dti--date-to-iso8601) -->
@@ -344,7 +344,6 @@ echo json_encode($results_object->answers,JSON_PRETTY_PRINT);
 
 ```
 
-<!-- 
 
 ## OSCRuby::AnalyticsReportsResults
 
@@ -355,32 +354,37 @@ OSCRuby::AnalyticsReportsResults only has one function: 'run', which takes an OS
 OSCRuby::AnalyticsReportsResults have the following properties: 'id', 'lookupName', and 'filters'. More on filters and supported datetime methods are below this OSCRuby::AnalyticsReportsResults example script.
 
 ```php
-require 'osc_ruby'
+require_once('./osvc_php.php');
 
-rn_client = OSCRuby::Client.new do |c|
-	c.username = ENV['OSC_ADMIN']
-	c.password = ENV['OSC_PASSWORD']
-	c.interface = ENV['OSC_SITE']	
-end
+$rn_client = new OSvCPHP\Client(array(
+	"username" => getenv("OSC_ADMIN"),
+	"password" => getenv("OSC_PASSWORD"),
+	"interface" => getenv("OSC_SITE"),
+	"demo_site" => true
+));
 
-last_updated = OSCRuby::AnalyticsReportResults.new(lookupName: "Last Updated By Status")
+$last_updated = new OSvCPHP\AnalyticsReportResults(array("lookupName" => "Last Updated By Status"));
 
-puts last_updated.run(rn_client)
+$results = $last_updated->run($rn_client);
+echo json_encode($results,JSON_PRETTY_PRINT);
 
-#{"Status"=>"Unresolved", "Incidents"=>704, "Average Time Since Last Response"=>"39029690.149123"}
-#{"Status"=>"Updated", "Incidents"=>461, "Average Time Since Last Response"=>"39267070.331683"}
+[
+    {
+        "Status": "Unresolved",
+        "Incidents": "793",
+        "Average Time Since Last Response": "57417609.617582"
+    },
+    {
+        "Status": "Updated",
+        "Incidents": "462",
+        "Average Time Since Last Response": "57542462.911111"
+    }
+]
 
 ```
 
 
-
-
-
-
-
-
-
-
+<!-- 
 ## Convenience Methods
 
 ### 'arrf' => analytics report results filter

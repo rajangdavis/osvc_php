@@ -2,6 +2,8 @@
 
 require_once('./osvc_php.php');
 
+// $GLOBALS["OSvCPHP_DEBUG"] = true;
+
 $rn_client = new OSvCPHP\Client(array(
 	"username" => getenv("OSC_ADMIN"),
 	"password" => getenv("OSC_PASSWORD"),
@@ -24,5 +26,5 @@ $mq = new OSvCPHP\QueryResultsSet;
 
 $results_object = $mq->query_set($rn_client,$query_arr);
 
+// echo json_encode($results_object->answers,JSON_PRETTY_PRINT);
 // echo json_encode($results_object->incidents,JSON_PRETTY_PRINT);
-echo json_encode($results_object->answers,JSON_PRETTY_PRINT);
