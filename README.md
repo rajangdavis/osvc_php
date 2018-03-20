@@ -18,7 +18,8 @@ You can use this PHP Library for basic scripting and microservices. The main fea
 
 1. [Simple configuration](#client-configuration)
 2. Running ROQL queries [1 at a time](#osvcphpqueryresults-example)
-<!--  or [multiple queries in a set](#oscrubyqueryresultsset-example) 
+or [multiple queries in a set](#oscrubyqueryresultsset-example) 
+<!--  
 3. [Running Reports with filters](#oscrubyanalyticsreportsresults)
 4. Convenience methods for Analytics filters and setting dates
 	1. ['arrf', an analytics report results filter](#arrf--analytics-report-results-filter)
@@ -45,10 +46,6 @@ And then execute:
 Or install it yourself as:
 
     $ gem install osc_ruby -->
-
-
-
-
 
 
 ## Client Configuration
@@ -84,9 +81,6 @@ $rn_client = new OSvCPHP\Client(array(
 ```
 
 
-
-
-
 ## OSvCPHP\QueryResults example
 
 This is for running one ROQL query. Whatever is allowed by the REST API (limits and sorting) is allowed with this library.
@@ -118,7 +112,6 @@ $q = new OSvCPHP\QueryResults;
 $q->query($rn_client,$query,true); # => "[{'id':1557,'name':...}]"
 
 ```
-<!-- 
 
 
 
@@ -138,156 +131,220 @@ OSCRuby::QueryResultsSet only has one function: 'query_set', which takes an OSCR
 ```php
 # NOTE: Make sure to put your queries WRAPPED in doublequotes("")
 # Pass in each query into a hash
-	# set query: to the query you want to execute
-	# set key: to the value you want the results to of the query to be referenced to
+    # set query: to the query you want to execute
+    # set key: to the value you want the results to of the query to be referenced to
 
-require 'osc_ruby'
+require_once('./osvc_php.php');
 
-rn_client = OSCRuby::Client.new do |c|
-	c.username = ENV['OSC_ADMIN']
-	c.password = ENV['OSC_PASSWORD']
-	c.interface = ENV['OSC_SITE']	
-end
+$rn_client = new OSvCPHP\Client(array(
+    "username" => getenv("OSC_ADMIN"),
+    "password" => getenv("OSC_PASSWORD"),
+    "interface" => getenv("OSC_SITE"),
+    "demo_site" => true
+));
 
-mq = OSCRuby::QueryResultsSet.new
-r = mq.query_set(rn_client,
-		 	{query:"DESCRIBE ANSWERS", key: "answerSchema"},
-		 	{query:"SELECT * FROM ANSWERS LIMIT 1", key: "answers"},
-		 	{query:"DESCRIBE SERVICECATEGORIES", key: "categoriesSchema"},
-		 	{query:"SELECT * FROM SERVICECATEGORIES", key:"categories"},
-		 	{query:"DESCRIBE SERVICEPRODUCTS", key: "productsSchema"},
-		 	{query:"SELECT * FROM SERVICEPRODUCTS", key:"products"})
+$query_arr = array(
+    array(
+        "key" => "incidents",
+        "query" => "SELECT * FROM incidents LIMIT 3"
+    ),
+    array(
+        "key" => "answers",
+        "query" => "SELECT * FROM answers LIMIT 3"
+    )
+);
 
-puts JSON.pretty_generate(r.answerSchema)
+$mq = new OSvCPHP\QueryResultsSet;
 
-# Results for "DESCRIBE ANSWERS"
-#
-# [
-#  {
-#    "Name": "id",
-#    "Type": "Integer",
-#    "Path": ""
-#  },
-#  {
-#    "Name": "lookupName",
-#    "Type": "String",
-#    "Path": ""
-#  },
-#  {
-#    "Name": "createdTime",
-#    "Type": "String",
-#    "Path": ""
-#  }
-#  ... everything else including customfields and objects...
-#]
+$results_object = $mq->query_set($rn_client,$query_arr);
 
-puts JSON.pretty_generate(r.answers)
+echo json_encode($results_object->incidents,JSON_PRETTY_PRINT);
 
-# Results for "SELECT * FROM ANSWERS LIMIT 1"
-#
-# [
-#  {
-#    "id": 1,
-#    "lookupName": 1,
-#    "createdTime": "2016-03-04T18:25:50Z",
-#    "updatedTime": "2016-09-12T17:12:14Z",
-#    "accessLevels": 1,
-#    "adminLastAccessTime": "2016-03-04T18:25:50Z",
-#    "answerType": 1,
-#    "expiresDate": null,
-#    "guidedAssistance": null,
-#    "keywords": null,
-#    "language": 1,
-#    "lastAccessTime": "2016-03-04T18:25:50Z",
-#    "lastNotificationTime": null,
-#    "name": 1,
-#    "nextNotificationTime": null,
-#    "originalReferenceNumber": null,
-#    "positionInList": 1,
-#    "publishOnDate": null,
-#    "question": null,
-#    "solution": "<HTML SOLUTION WITH INLINE CSS>",
-#    "summary": "SPRING IS ALMOST HERE!",
-#    "updatedByAccount": 16,
-#    "uRL": null
-#  }
-#]
-
-puts JSON.pretty_generate(r.categoriesSchema)
-
-# Results for "DESCRIBE SERVICECATEGORIES"
-# 
 #[
-#... skipping the first few ... 
-# {
-#    "Name": "adminVisibleInterfaces",
-#    "Type": "SubTable",
-#    "Path": "serviceCategories.adminVisibleInterfaces"
-#  },
-#  {
-#    "Name": "descriptions",
-#    "Type": "SubTable",
-#    "Path": "serviceCategories.descriptions"
-#  },
-#  {
-#    "Name": "displayOrder",
-#    "Type": "Integer",
-#    "Path": ""
-#  },
-#  {
-#    "Name": "endUserVisibleInterfaces",
-#    "Type": "SubTable",
-#    "Path": "serviceCategories.endUserVisibleInterfaces"
-#  },
-#  ... everything else include parents and children ...
+#    {
+#        "id": "21",
+#        "lookupName": "160311-000001",
+#        "createdTime": "2016-02-23T19:00:00Z",
+#        "updatedTime": "2016-06-14T20:31:40Z",
+#        "asset": null,
+#        "category": "3",
+#        "channel": "3",
+#        "chatQueue": null,
+#        "closedTime": null,
+#        "createdByAccount": "6",
+#        "disposition": "13",
+#        "initialResponseDueTime": "2016-02-23T19:00:00Z",
+#        "initialSolutionTime": "2016-02-23T19:00:00Z",
+#        "interface": "1",
+#        "language": "1",
+#        "lastResponseTime": "2016-02-23T19:00:00Z",
+#        "lastSurveyScore": null,
+#        "mailbox": null,
+#        "mailing": null,
+#        "organization": null,
+#        "product": "8",
+#        "queue": null,
+#        "referenceNumber": "160311-000001",
+#        "resolutionInterval": "-1440",
+#        "responseEmailAddressType": "0",
+#        "responseInterval": null,
+#        "severity": null,
+#        "smartSenseCustomer": null,
+#        "smartSenseStaff": null,
+#        "source": "8001",
+#        "subject": "How long until I receive my refund on my credit card?"
+#    },
+#    {
+#        "id": "22",
+#        "lookupName": "160311-000002",
+#        "createdTime": "2016-02-23T19:00:00Z",
+#        "updatedTime": "2016-06-14T20:31:40Z",
+#        "asset": null,
+#        "category": "3",
+#        "channel": "3",
+#        "chatQueue": null,
+#        "closedTime": null,
+#        "createdByAccount": "6",
+#        "disposition": "13",
+#        "initialResponseDueTime": "2016-02-23T19:00:00Z",
+#        "initialSolutionTime": "2016-02-23T19:00:00Z",
+#        "interface": "1",
+#        "language": "1",
+#        "lastResponseTime": "2016-02-23T19:00:00Z",
+#        "lastSurveyScore": null,
+#        "mailbox": null,
+#        "mailing": null,
+#        "organization": null,
+#        "product": "8",
+#        "queue": null,
+#        "referenceNumber": "160311-000002",
+#        "resolutionInterval": "-1440",
+#        "responseEmailAddressType": "0",
+#        "responseInterval": null,
+#        "severity": null,
+#        "smartSenseCustomer": null,
+#        "smartSenseStaff": null,
+#        "source": "8001",
+#        "subject": "Do you ship outside the US?"
+#    },
+#    {
+#        "id": "23",
+#        "lookupName": "160311-000003",
+#        "createdTime": "2016-02-23T19:00:00Z",
+#        "updatedTime": "2016-06-14T20:31:40Z",
+#        "asset": null,
+#        "category": "3",
+#        "channel": "3",
+#        "chatQueue": null,
+#        "closedTime": null,
+#        "createdByAccount": "6",
+#        "disposition": "13",
+#        "initialResponseDueTime": "2016-02-23T19:00:00Z",
+#        "initialSolutionTime": "2016-02-23T19:00:00Z",
+#        "interface": "1",
+#        "language": "1",
+#        "lastResponseTime": "2016-02-23T19:00:00Z",
+#        "lastSurveyScore": null,
+#        "mailbox": null,
+#        "mailing": null,
+#        "organization": null,
+#        "product": "8",
+#        "queue": null,
+#        "referenceNumber": "160311-000003",
+#        "resolutionInterval": "-1440",
+#        "responseEmailAddressType": "0",
+#        "responseInterval": null,
+#        "severity": null,
+#        "smartSenseCustomer": null,
+#        "smartSenseStaff": null,
+#        "source": "8001",
+#        "subject": "How can I order another product manual?"
+#    }
 #]
 
-puts JSON.pretty_generate(r.categories)
+echo json_encode($results_object->answers,JSON_PRETTY_PRINT);
 
-# Results for "SELECT * FROM SERVICECATEGORIES"
-#
-# [
-#  {
-#    "id": 3,
-#    "lookupName": "Manuals",
-#    "createdTime": null,
-#    "updatedTime": null,
-#    "displayOrder": 3,
-#    "name": "Manuals",
-#    "parent": 60
-#  },
-#  {
-#    "id": 4,
-#    "lookupName": "Installations",
-#    "createdTime": null,
-#    "updatedTime": null,
-#    "displayOrder": 4,
-#    "name": "Installations",
-#    "parent": 60
-#  },
-#  {
-#    "id": 5,
-#    "lookupName": "Downloads",
-#    "createdTime": null,
-#    "updatedTime": null,
-#    "displayOrder": 2,
-#    "name": "Downloads",
-#    "parent": 60
-#  },
-#  ... you should get the idea by now ...
+#[
+#    {
+#        "id": "1",
+#        "lookupName": "1",
+#        "createdTime": "2016-03-04T18:25:50Z",
+#        "updatedTime": "2016-09-12T17:12:14Z",
+#        "accessLevels": "0000000001",
+#        "adminLastAccessTime": "2016-03-04T18:25:50Z",
+#        "answerType": "1",
+#        "expiresDate": null,
+#        "guidedAssistance": null,
+#        "keywords": null,
+#        "language": "1",
+#        "lastAccessTime": "2016-03-04T18:25:50Z",
+#        "lastNotificationTime": null,
+#        "name": "1",
+#        "nextNotificationTime": null,
+#        "originalReferenceNumber": null,
+#        "positionInList": "1",
+#        "publishOnDate": null,
+#        "question": null,
+#        "solution": "<span style=\"WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: none; FLOAT: none; COLOR: rgb(119,119,119); FONT: 14px\/20px RobotoDraft, 'Helvetica Neue', Calibri, Helvetica, Arial, sans-serif; WIDOWS: 1; DISPLAY: inline !important; LETTER-SPACING: normal; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; -webkit-text-stroke-width: 0px\">Check out our new&#160;2017&#160;products.<\/span><br style=\"WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: none; COLOR: rgb(119,119,119); PADDING-BOTTOM: 0px; PADDING-TOP: 0px; FONT: 14px\/20px RobotoDraft, 'Helvetica Neue', Calibri, Helvetica, Arial, sans-serif; PADDING-LEFT: 0px; WIDOWS: 1; MARGIN: 0px; LETTER-SPACING: normal; PADDING-RIGHT: 0px; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; -webkit-text-stroke-width: 0px\" \/>\n<br style=\"WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: none; COLOR: rgb(119,119,119); PADDING-BOTTOM: 0px; PADDING-TOP: 0px; FONT: 14px\/20px RobotoDraft, 'Helvetica Neue', Calibri, Helvetica, Arial, sans-serif; PADDING-LEFT: 0px; WIDOWS: 1; MARGIN: 0px; LETTER-SPACING: normal; PADDING-RIGHT: 0px; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; -webkit-text-stroke-width: 0px\" \/>\n<a style=\"TEXT-DECORATION: none; WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: none; COLOR: rgb(231,76,60); PADDING-BOTTOM: 0px; PADDING-TOP: 0px; FONT: 14px\/20px RobotoDraft, 'Helvetica Neue', Calibri, Helvetica, Arial, sans-serif; PADDING-LEFT: 0px; WIDOWS: 1; MARGIN: 0px; LETTER-SPACING: normal; PADDING-RIGHT: 0px; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; -webkit-text-stroke-width: 0px\" href=\"http:\/\/oow2016.rightnowdemo.com\/euf\/assets\/html\/smartly\/product-template.html\">Go to the Smartly Store<\/a>\n",
+#        "summary": "SPRING IS ALMOST HERE!",
+#        "updatedByAccount": "16",
+#        "uRL": null
+#    },
+#    {
+#        "id": "2",
+#        "lookupName": "2",
+#        "createdTime": "2016-03-08T19:07:01Z",
+#        "updatedTime": "2016-05-13T14:00:35Z",
+#        "accessLevels": "0000000001",
+#        "adminLastAccessTime": "2016-03-08T19:07:01Z",
+#        "answerType": "3",
+#        "expiresDate": null,
+#        "guidedAssistance": null,
+#        "keywords": null,
+#        "language": "1",
+#        "lastAccessTime": "2017-11-29T21:04:24Z",
+#        "lastNotificationTime": null,
+#        "name": "2",
+#        "nextNotificationTime": null,
+#        "originalReferenceNumber": null,
+#        "positionInList": "1",
+#        "publishOnDate": null,
+#        "question": null,
+#        "solution": null,
+#        "summary": "Maestro Smart Thermostat Installation Guide",
+#        "updatedByAccount": "4",
+#        "uRL": "M2509LW Installation Guide.pdf"
+#    },
+#    {
+#        "id": "3",
+#        "lookupName": "3",
+#        "createdTime": "2016-03-08T19:43:33Z",
+#        "updatedTime": "2016-05-17T16:39:17Z",
+#        "accessLevels": "0000000001",
+#        "adminLastAccessTime": "2016-03-08T19:43:33Z",
+#        "answerType": "1",
+#        "expiresDate": null,
+#        "guidedAssistance": null,
+#        "keywords": null,
+#        "language": "1",
+#        "lastAccessTime": "2016-10-03T14:17:40Z",
+#        "lastNotificationTime": null,
+#        "name": "3",
+#        "nextNotificationTime": null,
+#        "originalReferenceNumber": null,
+#        "positionInList": "1",
+#        "publishOnDate": null,
+#        "question": "<p>Maestro Smart Thermostat App<\/p>\n\n",
+#        "solution": "<p>You will find the Maestro Smart Thermostat App in the Apple App Store or the Google Play store.<\/p>\n<p>Click on the icon to download the app.<\/p>\n<p>&#160;<img border=\"0\" alt=\"Image\" src=\"http:\/\/smartly.rightnowdemo.com\/euf\/assets\/images\/smartlyapp.png\" width=\"49\" height=\"47\" \/><\/p>\n\n",
+#        "summary": "Maestro Smart Thermostat App",
+#        "updatedByAccount": "4",
+#        "uRL": null
+#    }
 #]
-
-### Both of these are similar to the above
-puts JSON.pretty_generate(r.productsSchema) # => Results for "DESCRIBE SERVICEPRODUCTS"
-puts JSON.pretty_generate(r.products) # => Results for "SELECT * FROM SERVICEPRODUCTS"
 
 ```
 
-
-
-
-
-
+<!-- 
 
 ## OSCRuby::AnalyticsReportsResults
 

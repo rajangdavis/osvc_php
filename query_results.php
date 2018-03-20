@@ -24,5 +24,5 @@ $mq = new OSvCPHP\QueryResultsSet;
 
 $results_object = $mq->query_set($rn_client,$query_arr);
 
-echo json_encode($results_object->incidents,JSON_PRETTY_PRINT);
+// echo json_encode($results_object->incidents,JSON_PRETTY_PRINT);
 echo json_encode($results_object->answers,JSON_PRETTY_PRINT);
