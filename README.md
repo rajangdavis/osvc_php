@@ -368,18 +368,18 @@ $last_updated = new OSvCPHP\AnalyticsReportResults(array("lookupName" => "Last U
 $results = $last_updated->run($rn_client);
 echo json_encode($results,JSON_PRETTY_PRINT);
 
-[
-    {
-        "Status": "Unresolved",
-        "Incidents": "793",
-        "Average Time Since Last Response": "57417609.617582"
-    },
-    {
-        "Status": "Updated",
-        "Incidents": "462",
-        "Average Time Since Last Response": "57542462.911111"
-    }
-]
+#[
+#    {
+#        "Status": "Unresolved",
+#        "Incidents": "793",
+#        "Average Time Since Last Response": "57417609.617582"
+#    },
+#    {
+#        "Status": "Updated",
+#        "Incidents": "462",
+#        "Average Time Since Last Response": "57542462.911111"
+#    }
+#]
 
 ```
 
