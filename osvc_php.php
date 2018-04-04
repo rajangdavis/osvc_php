@@ -159,7 +159,7 @@ namespace OSvCPHP{
 		{
 			if(isset($results_array->rows)){
 				return self::iterate_through_rows($results_array);
-			}else if(isset($results_array) && gettype($results_array) == "array" && sizeof($results_array) > 1){
+			}else{
 				$results = array();
 				foreach ($results_array as $item) {
 					array_push($results, self::iterate_through_rows($item));

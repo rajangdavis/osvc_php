@@ -9,9 +9,15 @@ $rn_client = new OSvCPHP\Client(array(
 	"demo_site" => true
 ));
 
-$last_updated = new OSvCPHP\AnalyticsReportResults(
-	array("lookupName" => "Last Updated By Status")
+$arr = new OSvCPHP\AnalyticsReportResults(
+	array("id" => 176)
 );
 
-$results = $last_updated->run($rn_client);
-echo json_encode($results,JSON_PRETTY_PRINT);
+$results = $arr->run($rn_client);
+for ( $ii = sizeof($results); $ii--; ) {
+    $row = $results[$ii];
+    echo( "Columns: "
+    .join( ',', array_keys( $row ) ) . "\n" );
+    echo( "Values: "
+    .join( ',', $row ) . "\n" );
+}
