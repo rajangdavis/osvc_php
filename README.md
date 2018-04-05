@@ -26,11 +26,7 @@ You can use this PHP Library for basic scripting and microservices. The main fea
 2. Running ROQL queries [1 at a time](#osvcphpqueryresults-example)
 or [multiple queries in a set](#osvcphpqueryresultsset-example) 
 3. [Running Reports](#osvcphpanalyticsreportsresults)
-<!--  
-4. Convenience methods for Analytics filters and setting dates
-	1. ['arrf', an analytics report results filter](#arrf--analytics-report-results-filter)
-	2. ['dti', converts a date string to ISO8601 format](#dti--date-to-iso8601) -->
-3. Basic CRUD Operations via HTTP Methods
+4. Basic CRUD Operations via HTTP Methods
 	1. [Create => Post](#create)
 	2. [Read => Get](#read)
 	3. [Update => Patch](#update)
