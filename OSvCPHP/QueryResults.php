@@ -3,9 +3,9 @@
 namespace OSvCPHP;
 use OSvCPHP;
 
-require_once("./Client.php");
-require_once("./Connect.php");
-require_once("./Normalize.php");
+require_once("Client.php");
+require_once("Connect.php");
+require_once("Normalize.php");
 
 class QueryResults extends Client
 {

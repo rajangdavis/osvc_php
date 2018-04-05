@@ -2,8 +2,8 @@
 namespace OSvCPHP;
 use OSvCPHP;
 
-require_once("./Client.php");
-require_once("./QueryResults.php");
+require_once("Client.php");
+require_once("QueryResults.php");
 
 class QueryResultsSet extends Client
 {

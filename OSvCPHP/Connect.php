@@ -3,7 +3,7 @@
 namespace OSvCPHP;
 use OSvCPHP;
 
-require_once("./Client.php");
+require_once("Client.php");
 
 class Connect extends Client
 {

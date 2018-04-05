@@ -4,7 +4,7 @@ namespace OSvCPHP{
 
 	use OSvCPHP;
 
-	require_once("./Config.php");
+	require_once("Config.php");
 
 	$GLOBALS["OSvCPHP_DEBUG"] = false;
 
