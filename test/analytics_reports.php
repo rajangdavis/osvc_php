@@ -9,15 +9,13 @@ $rn_client = new OSvCPHP\Client(array(
 	"demo_site" => true
 ));
 
-$arr = new OSvCPHP\AnalyticsReportResults(
+$ar = new OSvCPHP\AnalyticsReportResults(
 	array("id" => 176)
 );
 
-$results = $arr->run($rn_client);
-for ( $ii = sizeof($results); $ii--; ) {
-    $row = $results[$ii];
-    echo( "Columns: "
-    .join( ',', array_keys( $row ) ) . "\n" );
-    echo( "Values: "
-    .join( ',', $row ) . "\n" );
-}
+$filters = array(
+	"name" => "search_ex",
+	"values" => array( "Maestro" )
+);
+
+$arr = $ar->run($rn_client, $filters);
