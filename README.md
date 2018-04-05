@@ -11,7 +11,7 @@ If you get SSL Errors (you probably will), follow [this link for instructions on
 
 Install with composer:
 
-    $ composer require rajangdavis/osvc_php
+    $ composer require rajangdavis/osvc_php --dev
    
 ## Compatibility
 
