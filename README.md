@@ -3,7 +3,7 @@
 An (under development) PHP library for using the [Oracle Service Cloud REST API](https://docs.oracle.com/cloud/latest/servicecs_gs/CXSVC/) influenced by the [ConnectPHP API](http://documentation.custhelp.com/euf/assets/devdocs/november2016/Connect_PHP/Default.htm)
 
 ## Installing PHP (for Windows)
-[Here is a Youtube video with instructions for Windows 10](https://www.youtube.com/watch?v=D-wFWUMHcUA). I would highly recommend installing PHP 7.
+[Here is a Youtube video with instructions for Windows 10](https://www.youtube.com/watch?v=D-wFWUMHcUA). I would highly recommend installing PHP 7.  
 
 If you get SSL Errors (you probably will), follow [this link for instructions on resolving SSL things that I know nothing about](https://stackoverflow.com/a/18972719/2548452).
    
