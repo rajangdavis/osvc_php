@@ -7,6 +7,12 @@ An (under development) PHP library for using the [Oracle Service Cloud REST API]
 
 If you get SSL Errors (you probably will), follow [this link for instructions on resolving SSL things that I know nothing about](https://stackoverflow.com/a/18972719/2548452).
    
+## Installation
+
+Install with composer:
+
+    $ composer require rajangdavis/osvc_php
+   
 ## Compatibility
 
 This PHP library tested against Oracle Service Cloud May 2017 using PHP 7.2.1. I _might_ set up Travis CI and Code Climate, it just depends if I find it worth my time.
