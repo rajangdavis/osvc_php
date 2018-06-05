@@ -12,8 +12,7 @@ before_install:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
-  - pwd
-  - ls -a
-  - phpunit --bootstrap vendor/autoload.php tests
+  - composer install
+  - phpunit --bootstrap ./vendor/autoload.php tests
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
