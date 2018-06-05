@@ -1,4 +1,6 @@
 # OSvCPHP
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Frajangdavis%2Fosvc_php.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Frajangdavis%2Fosvc_php?ref=badge_shield)
+
 
 An (under development) PHP library for using the [Oracle Service Cloud REST API](https://docs.oracle.com/cloud/latest/servicecs_gs/CXSVC/) influenced by the [ConnectPHP API](http://documentation.custhelp.com/euf/assets/devdocs/november2016/Connect_PHP/Default.htm)
 
@@ -677,3 +679,6 @@ echo json_encode($updated_product['info'],JSON_PRETTY_PRINT); # => cURL info
 echo json_encode($updated_product['body'],JSON_PRETTY_PRINT); # => null if successful
 
 ```
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Frajangdavis%2Fosvc_php.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Frajangdavis%2Fosvc_php?ref=badge_large)
