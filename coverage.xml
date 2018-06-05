@@ -3,12 +3,12 @@
 <phpunit>
      <testsuites>
         <testsuite name="Application Test Suite">
-            <directory>tests/</directory>
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
     <!-- you can keep your own options in these elements -->
     <filter>
-        <whitelist processUncoveredFilesFromWhitelistt="true">
+        <whitelist processUncoveredFilesFromWhitelist="true">
             <!-- this is the path of the files included in your clover report -->
             <directory suffix=".php">./src/</directory>
         </whitelist>
