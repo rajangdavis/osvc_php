@@ -10,7 +10,7 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelistt="true">
             <!-- this is the path of the files included in your clover report -->
-            <directory suffix=".php">./src</directory>
+            <directory suffix=".php">./src/</directory>
         </whitelist>
     </filter>
     <logging>
