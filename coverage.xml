@@ -1,9 +1,14 @@
 <?xml version="1.0"?>
 <!-- works fine with PHPUnit-3.6.10 -->
 <phpunit>
+     <testsuites>
+        <testsuite name="Application Test Suite">
+            <directory>tests/</directory>
+        </testsuite>
+    </testsuites>
     <!-- you can keep your own options in these elements -->
     <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
+        <whitelist processUncoveredFilesFromWhitelistt="true">
             <!-- this is the path of the files included in your clover report -->
             <directory suffix=".php">./src</directory>
         </whitelist>
