@@ -1,4 +1,7 @@
 # OSvCPHP
+[![Maintainability](https://api.codeclimate.com/v1/badges/985aec5962103587634f/maintainability)](https://codeclimate.com/github/rajangdavis/osvc_php/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/985aec5962103587634f/test_coverage)](https://codeclimate.com/github/rajangdavis/osvc_php/test_coverage)
+[![Build Status](https://travis-ci.org/rajangdavis/osvc_php.svg?branch=master)](https://travis-ci.org/rajangdavis/osvc_php)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Frajangdavis%2Fosvc_php.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Frajangdavis%2Fosvc_php?ref=badge_shield)
 
 
