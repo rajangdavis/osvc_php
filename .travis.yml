@@ -14,6 +14,6 @@ before_install:
 script:
   - composer install
   - php -v
-  - phpunit --bootstrap ./vendor/autoload.php tests
+  - phpunit --bootstrap ./vendor/autoload.php tests --coverage-clover ./coverage.xml
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
