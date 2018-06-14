@@ -40,3 +40,4 @@ class Config
 		$this->base_url = self::client_url($config_hash);
 	}
 }
+

@@ -9,13 +9,13 @@ class Normalize
 		static function results_to_array($response_object)
 		{
 
-			if(!in_array($response_object['info']['http_code'], array(200,201))){
-				return $response_object;
+			if(isset($response_object->status) && !in_array($response_object->status, array(200,201))){
+				return get_object_vars($response_object);
 			}else{
-				if(isset($response_object['body']->items)){
-					$results_array = $response_object['body']->items;
-				}else if(isset($response_object['body']->columnNames)){
-					$results_array = $response_object['body'];
+				if(isset($response_object->items)){
+					$results_array = $response_object->items;
+				}else if(isset($response_object->columnNames)){
+					$results_array = $response_object;
 				}
 			}
 
@@ -57,3 +57,5 @@ class Normalize
 			}
 		}
 	}
+
+	

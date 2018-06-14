@@ -40,3 +40,4 @@ class QueryResultsSet extends Client
 		return array($key_map,$queries_arr);
 	}
 }
+

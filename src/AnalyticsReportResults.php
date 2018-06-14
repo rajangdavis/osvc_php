@@ -35,3 +35,4 @@ class AnalyticsReportResults extends Client
 		return (array)Normalize::results_to_array($post_response);		
 	}
 }
+

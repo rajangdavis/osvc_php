@@ -116,7 +116,7 @@ $query = "select * from answers where ID = 1557";
 
 $q = new OSvCPHP\QueryResults;
 
-$q->query($rn_client,$query,true); # => "[{'id':1557,'name':...}]"
+$q->query($rn_client,$query); # => "[{'id':1557,'name':...}]"
 
 ```
 

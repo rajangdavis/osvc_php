@@ -8,9 +8,9 @@ require_once("Client.php");
 class Connect extends Client
 {
 
-	static function get($client_hash,$url)
+	static function get($client_hash,$url,$options)
 	{
-		return self::curlGeneric($client_hash,$url);
+		return self::curlGeneric($client_hash,$url,"GET",$options);
 	}	
 
 	static function post($client_hash,$url,$data)
@@ -28,8 +28,9 @@ class Connect extends Client
 		return self::curlGeneric($client_hash,$url,"DELETE");	
 	}
 
-	private static function curlGeneric($client_hash,$resource_url, $method = "GET",$data = null)
+	private static function curlGeneric($client_hash,$resource_url, $method = "GET", $options = array())
 	{
+
 		$resource_url_final = isset($resource_url) ? rawurlencode($resource_url) : "";
 		$url = $client_hash->config->base_url . $resource_url;
 		$curl = curl_init();
@@ -44,7 +45,7 @@ class Connect extends Client
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, !$client_hash->config->no_ssl_verify);
 		curl_setopt($curl, CURLOPT_POST, ($method == "POST")); 
-		if (($method == "POST" || "PATCH") && !is_null($data)) curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+		if (($method == "POST" || "PATCH") && isset($options['data'])) curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($options['data']));
 		if ($method == "PATCH"){
 			array_push($headers,"X-HTTP-Method-Override: PATCH");
 		}else if($method == "DELETE"){
@@ -54,13 +55,16 @@ class Connect extends Client
 		$body = json_decode(curl_exec($curl));
 		$info = curl_getinfo($curl);
 		curl_close($curl);
-		$final_results =  array(
-			'body' => $body,
-			'info'=> $info
-		);
-		if($GLOBALS["OSvCPHP_DEBUG"] === true){
-			echo json_encode($final_results, JSON_PRETTY_PRINT);
-		} 
-		return $final_results;
+		
+		if(isset($options['debug']) && $options['debug'] === true){
+			$final_results =  array(
+				'body' => $body,
+				'info'=> $info
+			);
+			return $final_results;
+		}else{
+			return $body;
+		}
 	}
 }
+

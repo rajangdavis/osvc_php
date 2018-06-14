@@ -5,8 +5,6 @@ env:
   global:
     - CC_TEST_REPORTER_ID=2d78dfed2d6f6b5447d36f4ddd205c82f353a269c4f77e0d0d6f27ac764fb5cf
 language: php
-rvm:
-- 2.5.0
 before_install:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
