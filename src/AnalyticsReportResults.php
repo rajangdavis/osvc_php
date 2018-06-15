@@ -9,7 +9,7 @@ require_once("Normalize.php");
 
 class AnalyticsReportResults extends Client
 {
-	public function run(array $options) : array
+	public function run(array $options)
 	{
 
 		if(isset($options['json'])){
