@@ -13,8 +13,11 @@ before_install:
 before_script:
   - mkdir -p build/logs
   - ls -al
+install:  
+  - travis_retry composer install --no-interaction --ignore-platform-reqs
+
 script:
-  - composer install
+  # - composer install
   - php -v
   - phpunit --bootstrap ./vendor/autoload.php tests --coverage-clover build/logs/clover.xml
 after_script:
