@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 final class QueryResultsTest extends TestCase
 {
 
-    public function testIsAnInstanceOfQueryResults(): void
+    public function testIsAnInstanceOfQueryResults()
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
@@ -24,7 +24,7 @@ final class QueryResultsTest extends TestCase
         );
     }
 
-    public function testShouldBeAbleToMakeAGetRequest(): void
+    public function testShouldBeAbleToMakeAGetRequest()
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
@@ -50,7 +50,7 @@ final class QueryResultsTest extends TestCase
     /**
      * @expectedException Exception
      */
-    public function testShouldErrorIfNoQueryIsPresent(): void
+    public function testShouldErrorIfNoQueryIsPresent()
     {
 		$rn_client = new OSvCPHP\Client(array(
 			"username" => getenv("OSC_ADMIN"),
@@ -71,7 +71,7 @@ final class QueryResultsTest extends TestCase
     /**
      * @expectedException Exception
      */
-    public function testShouldErrorIfOptionsIsNotAnAssociativeArray(): void
+    public function testShouldErrorIfOptionsIsNotAnAssociativeArray()
     {
 		$rn_client = new OSvCPHP\Client(array(
 			"username" => getenv("OSC_ADMIN"),
@@ -88,7 +88,7 @@ final class QueryResultsTest extends TestCase
     }
 
    
-    public function testShouldCatchAnErrorIfThereIsABadError(): void
+    public function testShouldCatchAnErrorIfThereIsABadError()
     {
 		$rn_client = new OSvCPHP\Client(array(
 			"username" => getenv("OSC_ADMIN"),
@@ -109,7 +109,7 @@ final class QueryResultsTest extends TestCase
 		$this->assertArrayHasKey("status", $results);
     }
 
-    public function testShouldReturnARawResponseObjectIfTheDebugOptionIsSetToTrue(): void
+    public function testShouldReturnARawResponseObjectIfTheDebugOptionIsSetToTrue()
     {
 		$rn_client = new OSvCPHP\Client(array(
 			"username" => getenv("OSC_ADMIN"),
@@ -132,7 +132,7 @@ final class QueryResultsTest extends TestCase
 		$this->assertArrayHasKey("body", $results);
     }
 
-    public function testShouldReturnARawResponseObjectIfTheDebugOptionIsSetToTrueAndABadRequestIsMade(): void
+    public function testShouldReturnARawResponseObjectIfTheDebugOptionIsSetToTrueAndABadRequestIsMade()
     {
 		$rn_client = new OSvCPHP\Client(array(
 			"username" => getenv("OSC_ADMIN"),

@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 final class AnalyticsReportResultsTest extends TestCase
 {
 
-    public function testIsAnInstanceOfAnalyticsReportResults(): void
+    public function testIsAnInstanceOfAnalyticsReportResults()
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
@@ -25,7 +25,7 @@ final class AnalyticsReportResultsTest extends TestCase
         );
     }
 
-    public function testShouldTakeAnOptionsObjectWithFiltersAndLimitAndMakeAPostRequest(): void
+    public function testShouldTakeAnOptionsObjectWithFiltersAndLimitAndMakeAPostRequest()
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
@@ -56,7 +56,7 @@ final class AnalyticsReportResultsTest extends TestCase
         $this->assertEquals(sizeof($arrResults),2);
     }
 
-    public function testShouldTakeAnOptionsObjectWithALookupNameAndMakeAPostRequest(): void
+    public function testShouldTakeAnOptionsObjectWithALookupNameAndMakeAPostRequest()
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
@@ -82,7 +82,7 @@ final class AnalyticsReportResultsTest extends TestCase
         $this->assertEquals(sizeof($arrResults),2);
     }
 
-    public function testShouldReturnAnErrorObjectWith400Error(): void
+    public function testShouldReturnAnErrorObjectWith400Error()
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
@@ -109,7 +109,7 @@ final class AnalyticsReportResultsTest extends TestCase
     /**
      * @expectedException Exception
      */
-    public function testShouldReturnAnErrorIfNoIDorLookupNameIsSet(): void
+    public function testShouldReturnAnErrorIfNoIDorLookupNameIsSet()
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
@@ -129,7 +129,7 @@ final class AnalyticsReportResultsTest extends TestCase
         $arrResults = $arr->run($options);
     }
 
-    public function testShouldReturnARawResponseObjectIfDebugOptionIsSetToTrue(): void
+    public function testShouldReturnARawResponseObjectIfDebugOptionIsSetToTrue()
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
@@ -156,7 +156,7 @@ final class AnalyticsReportResultsTest extends TestCase
 		$this->assertArrayHasKey("body", $arrResults);
     }
 
-    public function testShouldReturnARawResponseObjectIfDebugOptionIsSetToTrueAndABadRequestIsMade(): void
+    public function testShouldReturnARawResponseObjectIfDebugOptionIsSetToTrueAndABadRequestIsMade()
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
