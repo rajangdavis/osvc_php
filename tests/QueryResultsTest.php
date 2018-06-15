@@ -35,12 +35,13 @@ final class QueryResultsTest extends TestCase
 		));
 
 		$options = array(
-			"query" => "DESCRIBE CONTACTS"
+			"query" => "DESCRIBE CONTACTS",
+			"client" => $rn_client
 		);
 
 		$q = new OSvCPHP\QueryResults;
 
-		$results = $q->query($rn_client,$options);
+		$results = $q->query($options);
 		$this->assertArrayHasKey("Name", $results[0]);
 		$this->assertArrayHasKey("Type", $results[0]);
 		$this->assertArrayHasKey("Path", $results[0]);
@@ -59,12 +60,12 @@ final class QueryResultsTest extends TestCase
 		));
 
 		$options = array(
-			"query" => "DESCRIBE CONTACTS"
+			"client" => $rn_client
 		);
 
 		$q = new OSvCPHP\QueryResults;
 
-		$results = $q->query($rn_client);
+		$results = $q->query($options);
     }
 
     /**
@@ -83,7 +84,7 @@ final class QueryResultsTest extends TestCase
 
 		$q = new OSvCPHP\QueryResults;
 
-		$results = $q->query($rn_client,$query);
+		$results = $q->query($query);
     }
 
    
@@ -97,12 +98,13 @@ final class QueryResultsTest extends TestCase
 		));
 
 		$options = array(
+			"client" => $rn_client,
 			"query" => "DESCRIBE CONTACTSSS"
 		);
 
 		$q = new OSvCPHP\QueryResults;
 
-		$results = $q->query($rn_client, $options);
+		$results = $q->query($options);
 
 		$this->assertArrayHasKey("status", $results);
     }
@@ -117,13 +119,14 @@ final class QueryResultsTest extends TestCase
 		));
 
 		$options = array(
+			"client" => $rn_client,
 			"query" => "DESCRIBE CONTACTS",
 			"debug" => true
 		);
 
 		$q = new OSvCPHP\QueryResults;
 
-		$results = $q->query($rn_client, $options);
+		$results = $q->query($options);
 
 		$this->assertArrayHasKey("info", $results);
 		$this->assertArrayHasKey("body", $results);
@@ -139,13 +142,14 @@ final class QueryResultsTest extends TestCase
 		));
 
 		$options = array(
+			"client" => $rn_client,
 			"query" => "DESCRIBE CONTACTSSSSSS",
 			"debug" => true
 		);
 
 		$q = new OSvCPHP\QueryResults;
 
-		$results = $q->query($rn_client, $options);
+		$results = $q->query($options);
 
 		$this->assertArrayHasKey("info", $results);
 		$this->assertArrayHasKey("body", $results);

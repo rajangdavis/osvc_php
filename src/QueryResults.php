@@ -11,7 +11,7 @@ include "Examples.php";
 
 class QueryResults extends Client
 {
-	public function query($client,$options = array())
+	public function query($options = array())
 	{
 		if(gettype($options) != "array"){
 			$err = "Options must be an associative array";
@@ -29,7 +29,9 @@ class QueryResults extends Client
 			$query = $options['query'];
 		}
 
-		$get_response = Connect::get($client,'queryResults?query=' . rawurlencode($query), $options);
+		$options['url'] = 'queryResults?query=' . rawurlencode($query);
+
+		$get_response = Connect::get($options);
 
 		if(isset($options['debug']) && $options['debug'] === true){
 			return $get_response;

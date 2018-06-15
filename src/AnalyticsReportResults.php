@@ -9,30 +9,32 @@ require_once("Normalize.php");
 
 class AnalyticsReportResults extends Client
 {
-	public $id,$lookupName,$filters;
-
-	public function __construct($name_or_id)
+	public function run(array $options) : array
 	{
-		if(array_key_exists("id", $name_or_id)){
-			$this->id = $name_or_id["id"];
-		}else if(array_key_exists("lookupName", $name_or_id)){
-			$this->lookupName = $name_or_id["lookupName"];
+
+		if(isset($options['json'])){
+			$this->_checkForIdAndLookupName($options['json']);
+		}
+
+		$options['url'] = "analyticsReportResults";
+
+		$post_response = Connect::post($options);
+
+		if(isset($options['debug']) && $options['debug'] === true){
+			return $post_response;
 		}else{
-			// error
+			return Normalize::results_to_array($post_response);
 		}
 	}
 
-	public function run($client,$filters = array())
+	private function _checkForIdAndLookupName($json)
 	{
-		$this->filters = $filters;
-		$json_data = array();
-		foreach ($this as $property => $value) {
-			if($value != null){
-				$json_data[$property] = $value;
-			}
+		if(!isset($json['id']) && !isset($json['lookupName'])){
+			$err = "AnalyticsReportResults must have an 'id' or 'lookupName' set within the json data object";
+			$example = ANALYTICS_REPORT_RESULTS_NO_ID_OR_LOOKUPNAME_EXAMPLE;
+
+			return Validations::customError($err,$example);
 		}
-		$post_response = Connect::post($client,'analyticsReportResults',$json_data);
-		return (array)Normalize::results_to_array($post_response);		
 	}
 }
 

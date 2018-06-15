@@ -8,28 +8,30 @@ require_once("Client.php");
 class Connect extends Client
 {
 
-	static function get($client_hash,$url,$options)
+	static function get($options)
 	{
-		return self::curlGeneric($client_hash,$url,"GET",$options);
+		return self::curlGeneric($options,"GET");
 	}	
 
-	static function post($client_hash,$url,$data)
+	static function post($options)
 	{
-		return self::curlGeneric($client_hash,$url,"POST",$data);
+		return self::curlGeneric($options,"POST");
 	}	
 
-	static function patch($client_hash,$url,$data)
+	static function patch($options)
 	{
-		return self::curlGeneric($client_hash,$url,"PATCH",$data);	
+		return self::curlGeneric($options,"PATCH");	
 	}	
 
-	static function delete($client_hash,$url)
+	static function delete($options)
 	{
-		return self::curlGeneric($client_hash,$url,"DELETE");	
+		return self::curlGeneric($options,"DELETE");	
 	}
 
-	private static function curlGeneric($client_hash,$resource_url, $method = "GET", $options = array())
+	private static function curlGeneric($options, $method = "GET")
 	{
+		$client_hash = $options['client'];
+		$resource_url = $options['url'];
 
 		$resource_url_final = isset($resource_url) ? rawurlencode($resource_url) : "";
 		$url = $client_hash->config->base_url . $resource_url;
@@ -45,7 +47,7 @@ class Connect extends Client
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, !$client_hash->config->no_ssl_verify);
 		curl_setopt($curl, CURLOPT_POST, ($method == "POST")); 
-		if (($method == "POST" || "PATCH") && isset($options['data'])) curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($options['data']));
+		if (($method == "POST" || "PATCH") && isset($options['json'])) curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($options['json']));
 		if ($method == "PATCH"){
 			array_push($headers,"X-HTTP-Method-Override: PATCH");
 		}else if($method == "DELETE"){
