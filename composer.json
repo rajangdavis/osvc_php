@@ -18,6 +18,6 @@
     "version": "1.0.2",
     "minimum-stability": "stable",
     "require-dev": {
-        "phpunit/phpunit": "^7"
+        "phpunit/phpunit": "^5.0|^7.0"
     }
 }
