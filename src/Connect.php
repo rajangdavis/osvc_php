@@ -33,7 +33,7 @@ class Connect extends Client
 
 	private static function _curl_generic($options, $method = "GET")
 	{
-		$curl = self::_init_curl(); 
+		$curl = self::_init_curl($options, $method); 
 		return self::_run_curl($options, $curl);
 	}
 
@@ -45,7 +45,8 @@ class Connect extends Client
 					
 		}
 
-			private static function _set_url($options,$curl){
+			private static function _set_url($options,$curl)
+			{
 				$resource_url = $options['url'];
 				$resource_url_final = isset($resource_url) ? rawurlencode($resource_url) : "";
 				$url =  $options['client']->config->base_url . $resource_url;
@@ -59,15 +60,15 @@ class Connect extends Client
 				$headers = self::_init_headers($options);
 
 				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, !$options['client']->config->no_ssl_verify);
-				curl_setopt($urlSetForCurl, CURLOPT_POST, ($method == "POST")); 
-				if (($method == "POST" || "PATCH") && isset($options['json'])) curl_setopt($urlSetForCurl, CURLOPT_POSTFIELDS, json_encode($options['json']));
+				curl_setopt($curl, CURLOPT_POST, ($method == "POST")); 
+				if (($method == "POST" || "PATCH") && isset($options['json'])) curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($options['json']));
 				if ($method == "PATCH"){
 					array_push($headers,"X-HTTP-Method-Override: PATCH");
 				}else if($method == "DELETE"){
-					curl_setopt($urlSetForCurl, CURLOPT_CUSTOMREQUEST, 'DELETE');
+					curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
 				}
-				curl_setopt($urlSetForCurl, CURLOPT_HTTPHEADER, $headers);
-				return $urlSetForCurl;
+				curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+				return $curl;
 			}
 
 				private static function _init_headers($options)
