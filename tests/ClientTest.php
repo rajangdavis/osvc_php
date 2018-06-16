@@ -23,26 +23,29 @@ final class ClientTest extends TestCase
         );
     }
 
-	/* should take "username", "password", and "interface" values from and object and match them */ 
+	/* should take "username", "password", and "interface" values and return a config hash with a base_url, and encoded login*/ 
 
 	public function testShouldTakeUsernamePasswordAndInterfaceValuesFromAndObjectAndMatchThem()
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => "Admin",
+			"password" => "Admin Password",
+			"interface" => "interface",
 		));
 
-        $this->assertArrayHasKey('username', $rn_client->config);
-        $this->assertEquals($rn_client->config('username'),getenv("OSC_ADMIN"));
+		// http://djsipe.com/2017/04/21/testing-protected-php-methods-and-properties/
+		$reflection = new \ReflectionClass($rn_client);
+		$property   = $reflection->getProperty('config');
+		$property->setAccessible(true);
 
-        $this->assertArrayHasKey('interface', $rn_client->config);
-        $this->assertEquals($rn_client->config('interface'),getenv("OSC_PASSWORD"));
+		$testableConfig = $property->getValue($rn_client);
 
-        $this->assertArrayHasKey('password', $rn_client->config);
-        $this->assertEquals($rn_client->config('password'), getenv("OSC_SITE"));
+        $this->assertObjectHasAttribute('login',$testableConfig);
+        $this->assertEquals($testableConfig->login,"QWRtaW46QWRtaW4gUGFzc3dvcmQ=");
+
+        $this->assertObjectHasAttribute('base_url', $testableConfig);
+        $this->assertEquals($testableConfig->base_url,"https://interface.custhelp.com/services/rest/connect/v1.3/");
 
 
 	}
