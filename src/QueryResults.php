@@ -17,13 +17,13 @@ class QueryResults extends Client
 			$err = "Options must be an associative array";
 			$example = QUERY_RESULTS_BAD_OPTIONS_EXAMPLE;
 
-			return Validations::customError($err,$example);
+			return Validations::custom_error($err,$example);
 		
 		}else if(!isset($options['query']) || $options['query'] === ""){
 			$err = "QueryResults must have a query set within the options.";
 			$example = QUERY_RESULTS_NO_QUERY_EXAMPLE;
 
-			return Validations::customError($err,$example);
+			return Validations::custom_error($err,$example);
 		}
 		else{
 			$query = $options['query'];

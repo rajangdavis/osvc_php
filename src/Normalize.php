@@ -8,7 +8,6 @@ class Normalize
 	{
 		static function results_to_array($response_object)
 		{
-
 			if(isset($response_object->status) && !in_array($response_object->status, array(200,201))){
 				return get_object_vars($response_object);
 			}else{

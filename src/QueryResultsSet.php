@@ -10,16 +10,16 @@ class QueryResultsSet extends Client
 
 	public function query_set($client,$query_arr)
 	{
-		$key_and_query_maps = self::parse_queries($query_arr);
+		$key_and_query_maps = self::_parse_queries($query_arr);
 		$keys = $key_and_query_maps[0];
 		$queries = $key_and_query_maps[1];
 		$joined_query = implode(";", $queries);
 		$q = new QueryResults;
 		$results = $q->query($client,$joined_query);
-		return self::match_results_to_keys($keys,$results);
+		return self::_match_results_to_keys($keys,$results);
 	}
 
-	private static function match_results_to_keys($keys,$results)
+	private static function _match_results_to_keys($keys,$results)
 	{
 		$results_object = array();
 		foreach ($keys as $index => $key) {
@@ -28,7 +28,7 @@ class QueryResultsSet extends Client
 		return (object)$results_object;
 	}
 
-	private static function parse_queries($query_arr)
+	private static function _parse_queries($query_arr)
 	{
 		$queries_arr = [];
 		$key_map = [];

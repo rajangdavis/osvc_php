@@ -13,7 +13,7 @@ class AnalyticsReportResults extends Client
 	{
 
 		if(isset($options['json'])){
-			$this->_checkForIdAndLookupName($options['json']);
+			$this->_check_for_id_and_lookup_name($options['json']);
 		}
 
 		$options['url'] = "analyticsReportResults";
@@ -27,13 +27,13 @@ class AnalyticsReportResults extends Client
 		}
 	}
 
-	private function _checkForIdAndLookupName($json)
+	private function _check_for_id_and_lookup_name($json)
 	{
 		if(!isset($json['id']) && !isset($json['lookupName'])){
 			$err = "AnalyticsReportResults must have an 'id' or 'lookupName' set within the json data object";
 			$example = ANALYTICS_REPORT_RESULTS_NO_ID_OR_LOOKUPNAME_EXAMPLE;
 
-			return Validations::customError($err,$example);
+			return Validations::custom_error($err,$example);
 		}
 	}
 }

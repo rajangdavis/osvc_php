@@ -10,25 +10,25 @@ class Connect extends Client
 
 	static function get($options)
 	{
-		return self::curlGeneric($options,"GET");
+		return self::curl_generic($options,"GET");
 	}	
 
 	static function post($options)
 	{
-		return self::curlGeneric($options,"POST");
+		return self::curl_generic($options,"POST");
 	}	
 
 	static function patch($options)
 	{
-		return self::curlGeneric($options,"PATCH");	
+		return self::curl_generic($options,"PATCH");	
 	}	
 
 	static function delete($options)
 	{
-		return self::curlGeneric($options,"DELETE");	
+		return self::curl_generic($options,"DELETE");	
 	}
 
-	private static function curlGeneric($options, $method = "GET")
+	private static function curl_generic($options, $method = "GET")
 	{
 		$client_hash = $options['client'];
 		$resource_url = $options['url'];
