@@ -28,6 +28,14 @@ class QueryResults extends Client
 
 	private static function _validate_options_for_query($options)
 	{
+		
+		self:: _options_and_query_exist($options);
+		return $options['query'];
+		
+	}
+
+	private static function _options_and_query_exist($options)
+	{
 		if(gettype($options) != "array"){
 			$err = "Options must be an associative array";
 			$example = QUERY_RESULTS_BAD_OPTIONS_EXAMPLE;
@@ -39,9 +47,6 @@ class QueryResults extends Client
 			$example = QUERY_RESULTS_NO_QUERY_EXAMPLE;
 
 			return Validations::custom_error($err,$example);
-		}
-		else{
-			return $options['query'];
 		}
 	}
 }

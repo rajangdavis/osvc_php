@@ -36,6 +36,7 @@ class Connect extends Client
 			// setting curl configurations
 				// specifying which HTTP method to use
 					// which requires a generic set of headers to modify
+				// and setting any json if there is any
 		// Then you run curl			
 
 
@@ -69,32 +70,38 @@ class Connect extends Client
 				return self::_set_method($options, $curl, $method);
 			}
 
+
 				private static function _set_method($options, $curl, $method)
 				{
 					$headers = self::_init_headers($options);
 					curl_setopt($curl, CURLOPT_POST, ($method == "POST")); 
-					if (($method == "POST" || "PATCH") && isset($options['json'])) curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($options['json']));
 					if ($method == "PATCH"){
 						array_push($headers,"X-HTTP-Method-Override: PATCH");
 					}else if($method == "DELETE"){
 						curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
 					}
 					curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+					return self::_set_json_to_fields($options,$curl, $method);
+				}
+
+				private static function _set_json_to_fields($options,$curl, $method)
+				{
+					if (($method == "POST" || "PATCH") && isset($options['json'])) curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($options['json']));
 					return $curl;
 				}
 
-				private static function _init_headers($options)
-				{
-					$headers = array(
-						"Content-Type: application/json",
-						"Authorization: Basic " . $options['client']->config->login,
-						"Connection: Keep-Alive",
-						"Keep-Alive: timeout=1, max=1000"
-					);
+					private static function _init_headers($options)
+					{
+						$headers = array(
+							"Content-Type: application/json",
+							"Authorization: Basic " . $options['client']->config->login,
+							"Connection: Keep-Alive",
+							"Keep-Alive: timeout=1, max=1000"
+						);
 
-					if($options['client']->config->suppress_rules) array_push($headers,"OSvC-CREST-Suppress-All : true");
-					return $headers;
-				}
+						if($options['client']->config->suppress_rules) array_push($headers,"OSvC-CREST-Suppress-All : true");
+						return $headers;
+					}
 
 		private static function _run_curl($options,$curl)
 		{
