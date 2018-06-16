@@ -12,16 +12,10 @@ $rn_client = new OSvCPHP\Client(array(
 $options = array(
 	"client" => $rn_client,
 	"json" => array(
-		// "filters" => array(
-		// 	array(
-		// 		"name" => "search_ex",
-		// 		"values" => array("returns")
-		// 	)
-  //   	),
     	"limit" => 2,
-  //   	"id" => 176
-		"lookupName" => "Incident Activity"
-	)
+    	"lookupName" => "Incident Activity"
+	),
+	"debug" => true
 );
 
 $arr = new OSvCPHP\AnalyticsReportResults;

@@ -10,15 +10,19 @@ class Normalize
 		{
 			if(isset($response_object->status) && !in_array($response_object->status, array(200,201))){
 				return get_object_vars($response_object);
-			}else{
-				if(isset($response_object->items)){
-					$results_array = $response_object->items;
-				}else if(isset($response_object->columnNames)){
-					$results_array = $response_object;
-				}
 			}
+				
+			$results_array = self::_analytics_query_switch($response_object);
 
 			return self::check_for_items_and_rows($results_array);
+		}
+
+		private static function _analytics_query_switch($response_object){
+			if(isset($response_object->items)){
+				return $response_object->items;
+			}else if(isset($response_object->columnNames)){
+				return  $response_object;
+			}
 		}
 
 		private static function iterate_through_rows($item)

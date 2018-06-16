@@ -10,25 +10,25 @@ class Connect extends Client
 
 	static function get($options)
 	{
-		return self::curl_generic($options,"GET");
+		return self::_curl_generic($options,"GET");
 	}	
 
 	static function post($options)
 	{
-		return self::curl_generic($options,"POST");
+		return self::_curl_generic($options,"POST");
 	}	
 
 	static function patch($options)
 	{
-		return self::curl_generic($options,"PATCH");	
+		return self::_curl_generic($options,"PATCH");	
 	}	
 
 	static function delete($options)
 	{
-		return self::curl_generic($options,"DELETE");	
+		return self::_curl_generic($options,"DELETE");	
 	}
 
-	private static function curl_generic($options, $method = "GET")
+	private static function _curl_generic($options, $method = "GET")
 	{
 		$client_hash = $options['client'];
 		$resource_url = $options['url'];
@@ -54,10 +54,15 @@ class Connect extends Client
 			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
 		}
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+		return self::_run_curl($curl, $options);
+	}
+
+	private static function _run_curl($curl, $options){
+		
 		$body = json_decode(curl_exec($curl));
 		$info = curl_getinfo($curl);
 		curl_close($curl);
-		
+
 		if(isset($options['debug']) && $options['debug'] === true){
 			$final_results =  array(
 				'body' => $body,

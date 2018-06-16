@@ -45,7 +45,6 @@ final class ClientTest extends TestCase
         $this->assertEquals($testableConfig->login,"QWRtaW46QWRtaW4gUGFzc3dvcmQ=");
 
         $this->assertObjectHasAttribute('base_url', $testableConfig);
-        $this->assertEquals($testableConfig->base_url,"https://interface.custhelp.com/services/rest/connect/v1.3/");
 
 
 	}
@@ -58,8 +57,20 @@ final class ClientTest extends TestCase
 	public function testShouldTakeADemositeFromAnObjectAndSetAUrlToUseThe()
 	{
 
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => "Admin",
+			"password" => "Admin Password",
+			"interface" => "interface",
+			"demo_site" => true
+		));
 
+		// http://djsipe.com/2017/04/21/testing-protected-php-methods-and-properties/
+		$reflection = new \ReflectionClass($rn_client);
+		$property   = $reflection->getProperty('config');
+		$property->setAccessible(true);
 
+		$testableConfig = $property->getValue($rn_client);
+        $this->assertEquals($testableConfig->base_url,"https://interface.rightnowdemo.com/services/rest/connect/v1.3/");
 
 	}
 
@@ -71,7 +82,27 @@ final class ClientTest extends TestCase
 	public function testShouldTakeNosslverifyversionAndSuppressrulesValuesFromAnObjectAndMatchThem()
 	{
 
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => "Admin",
+			"password" => "Admin Password",
+			"interface" => "interface",
+			"demo_site" => true,
+			"no_ssl_verify" => true,
+			"suppress_rules" => true,
+		));
 
+		// http://djsipe.com/2017/04/21/testing-protected-php-methods-and-properties/
+		$reflection = new \ReflectionClass($rn_client);
+		$property   = $reflection->getProperty('config');
+		$property->setAccessible(true);
+
+		$testableConfig = $property->getValue($rn_client);
+		
+		$this->assertObjectHasAttribute('no_ssl_verify',$testableConfig);
+        $this->assertEquals($testableConfig->no_ssl_verify,true);
+
+        $this->assertObjectHasAttribute('suppress_rules',$testableConfig);
+        $this->assertEquals($testableConfig->suppress_rules,true);
 
 
 	}
