@@ -13,6 +13,21 @@ class QueryResults extends Client
 {
 	public function query($options = array())
 	{
+		$query = self::_validate_options_for_query($options);
+
+		$options['url'] = 'queryResults?query=' . rawurlencode($query);
+
+		$get_response = Connect::get($options);
+
+		if(isset($options['debug']) && $options['debug'] === true){
+			return $get_response;
+		}else{
+			return Normalize::results_to_array($get_response);
+		}
+	}
+
+	private static function _validate_options_for_query($options)
+	{
 		if(gettype($options) != "array"){
 			$err = "Options must be an associative array";
 			$example = QUERY_RESULTS_BAD_OPTIONS_EXAMPLE;
@@ -26,17 +41,7 @@ class QueryResults extends Client
 			return Validations::custom_error($err,$example);
 		}
 		else{
-			$query = $options['query'];
-		}
-
-		$options['url'] = 'queryResults?query=' . rawurlencode($query);
-
-		$get_response = Connect::get($options);
-
-		if(isset($options['debug']) && $options['debug'] === true){
-			return $get_response;
-		}else{
-			return Normalize::results_to_array($get_response);
+			return $options['query'];
 		}
 	}
 }

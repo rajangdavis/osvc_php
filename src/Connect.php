@@ -30,6 +30,14 @@ class Connect extends Client
 
 	
 
+	// In order to make a generic curl function
+		// You need to initialize curl by
+			// setting a URL
+			// setting curl configurations
+				// specifying which HTTP method to use
+					// which requires a generic set of headers to modify
+		// Then you run curl			
+
 
 	private static function _curl_generic($options, $method = "GET")
 	{
@@ -57,19 +65,23 @@ class Connect extends Client
 
 			private static function _config_curl($options,$curl,$method)
 			{
-				$headers = self::_init_headers($options);
-
 				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, !$options['client']->config->no_ssl_verify);
-				curl_setopt($curl, CURLOPT_POST, ($method == "POST")); 
-				if (($method == "POST" || "PATCH") && isset($options['json'])) curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($options['json']));
-				if ($method == "PATCH"){
-					array_push($headers,"X-HTTP-Method-Override: PATCH");
-				}else if($method == "DELETE"){
-					curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
-				}
-				curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-				return $curl;
+				return self::_set_method($options, $curl, $method);
 			}
+
+				private static function _set_method($options, $curl, $method)
+				{
+					$headers = self::_init_headers($options);
+					curl_setopt($curl, CURLOPT_POST, ($method == "POST")); 
+					if (($method == "POST" || "PATCH") && isset($options['json'])) curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($options['json']));
+					if ($method == "PATCH"){
+						array_push($headers,"X-HTTP-Method-Override: PATCH");
+					}else if($method == "DELETE"){
+						curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
+					}
+					curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+					return $curl;
+				}
 
 				private static function _init_headers($options)
 				{
