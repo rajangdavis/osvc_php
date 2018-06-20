@@ -8,12 +8,12 @@ class Config
 {
 	public $no_ssl_verify,$suppress_rules,$login,$base_url,$session_id,$oauth,$access_token;
 
-	private function hidden_credentials($credential_string)
+	private function _hidden_credentials($credential_string)
 	{
 		return base64_encode($credential_string);
 	}
 
-	private function client_url($config_hash)
+	private function _client_url($config_hash)
 	{
 		$base_url = "https://" . $config_hash['interface'] . ".";
 
@@ -32,20 +32,23 @@ class Config
 		return $base_url . "/";
 	}
 
-	public function __construct($config_hash)
+	private function _set_auth($config_hash)
 	{
-		
 		if(isset($config_hash['username']) || isset($config_hash['password'])){
-			$this->login = self::hidden_credentials($config_hash['username'] .":". $config_hash['password'] );
+			$this->login = self::_hidden_credentials($config_hash['username'] .":". $config_hash['password'] );
 		}else if(isset($config_hash['session_id'])){
 			$this->session_id = $config_hash['session_id'];
 		}else if(isset($config_hash['oauth'])){
 			$this->oauth = $config_hash['oauth'];
 		}
+	}
 
+	public function __construct($config_hash)
+	{
+		$this->_set_auth($config_hash);
 		$this->no_ssl_verify = isset($config_hash['no_ssl_verify']) ? $config_hash['no_ssl_verify'] : false;
 		$this->suppress_rules = isset($config_hash['suppress_rules']) ? $config_hash['suppress_rules'] : false;
-		$this->base_url = self::client_url($config_hash);
+		$this->base_url = self::_client_url($config_hash);
 		$this->access_token = isset($config_hash['access_token']) ? $config_hash['access_token'] : false;
 	}
 }
