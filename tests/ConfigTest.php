@@ -89,7 +89,7 @@ final class ConfigTest extends TestCase
 		$config = new OSvCPHP\Config($options);
 
 
-		$this->assertEquals('YWRtaW46cGFzc3dvcmQ=',$config->login);
+		$this->assertEquals('Basic YWRtaW46cGFzc3dvcmQ=',$config->auth_header);
 
 
 	}
@@ -175,7 +175,7 @@ final class ConfigTest extends TestCase
 		$config = new OSvCPHP\Config($options);
 
 
-		$this->assertEquals("session_id_for_authentication",$config->session_id);
+		$this->assertEquals("Session session_id_for_authentication",$config->auth_header);
 
 
 	}
@@ -196,7 +196,7 @@ final class ConfigTest extends TestCase
 		$config = new OSvCPHP\Config($options);
 
 
-		$this->assertEquals("oauth_for_authentication",$config->oauth);
+		$this->assertEquals("Bearer oauth_for_authentication",$config->auth_header);
 
 
 	}

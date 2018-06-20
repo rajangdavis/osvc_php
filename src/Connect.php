@@ -106,7 +106,7 @@ class Connect extends Client
 	{
 		$headers = array(
 			"Content-Type: application/json",
-			"Authorization: " . self::_set_auth($options),
+			"Authorization: " . $options['client']->config->auth_header,
 			"Connection: Keep-Alive",
 			"Keep-Alive: timeout=1, max=1000"
 		);
@@ -117,19 +117,6 @@ class Connect extends Client
 
 		if($options['client']->config->suppress_rules) array_push($headers,"OSvC-CREST-Suppress-All : true");
 		return $headers;
-	}
-
-	private static function _set_auth($options)
-	{
-		if(isset($options['client']->config->login)){
-			$auth = "Basic " . $options['client']->config->login;
-		}else if(isset($options['client']->config->session_id)){
-			$auth = "Session " . $options['client']->config->session_id;
-		}else if(isset($options['client']->config->oauth)){
-			$auth = "Bearer " . $options['client']->config->oauth;
-		}
-
-		return $auth;
 	}
 
 	private static function _run_curl($options,$curl)

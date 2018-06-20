@@ -6,7 +6,7 @@ use OSvCPHP;
 
 class Config
 {
-	public $no_ssl_verify,$suppress_rules,$login,$base_url,$session_id,$oauth,$access_token;
+	public $no_ssl_verify,$suppress_rules,$base_url,$auth_header,$access_token;
 
 	private function _hidden_credentials($credential_string)
 	{
@@ -35,11 +35,11 @@ class Config
 	private function _set_auth($config_hash)
 	{
 		if(isset($config_hash['username']) || isset($config_hash['password'])){
-			$this->login = self::_hidden_credentials($config_hash['username'] .":". $config_hash['password'] );
+			$this->auth_header = "Basic " . self::_hidden_credentials($config_hash['username'] .":". $config_hash['password'] );
 		}else if(isset($config_hash['session_id'])){
-			$this->session_id = $config_hash['session_id'];
+			$this->auth_header = "Session " . $config_hash['session_id'];
 		}else if(isset($config_hash['oauth'])){
-			$this->oauth = $config_hash['oauth'];
+			$this->auth_header = "Bearer " . $config_hash['oauth'];
 		}
 	}
 
@@ -49,7 +49,10 @@ class Config
 		$this->no_ssl_verify = isset($config_hash['no_ssl_verify']) ? $config_hash['no_ssl_verify'] : false;
 		$this->suppress_rules = isset($config_hash['suppress_rules']) ? $config_hash['suppress_rules'] : false;
 		$this->base_url = self::_client_url($config_hash);
-		$this->access_token = isset($config_hash['access_token']) ? $config_hash['access_token'] : false;
+		
+		if(isset($config_hash['access_token'])){
+			$this->access_token = $config_hash['access_token'];
+		}
 	}
 }
 
