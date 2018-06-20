@@ -10,7 +10,7 @@ class Connect extends Client
 
 	static function get($options)
 	{
-		return self::_curl_generic($options,"GET");
+		return self::_curl_generic(self::_download_check($options),"GET");
 	}	
 
 	static function post($options)
@@ -32,8 +32,6 @@ class Connect extends Client
 	{
 		return self::_curl_generic($options,"OPTIONS");	
 	}
-
-	
 
 	// In order to make a generic curl function
 		// You need to initialize curl by
@@ -135,6 +133,15 @@ class Connect extends Client
 		}else{
 			return $body;
 		}
+	}
+
+
+	private static function	_download_check($options)
+	{
+		if(strrpos($options["url"],"?download") == true){
+			
+		}
+		return $options;
 	}
 }
 
