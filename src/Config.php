@@ -6,7 +6,7 @@ use OSvCPHP;
 
 class Config
 {
-	public $no_ssl_verify,$suppress_rules,$login,$base_url;
+	public $no_ssl_verify,$suppress_rules,$login,$base_url,$session_id,$oauth,$access_token;
 
 	private function hidden_credentials($credential_string)
 	{
@@ -34,10 +34,19 @@ class Config
 
 	public function __construct($config_hash)
 	{
-		$this->login = self::hidden_credentials($config_hash['username'] .":". $config_hash['password'] );
+		
+		if(isset($config_hash['username']) || isset($config_hash['password'])){
+			$this->login = self::hidden_credentials($config_hash['username'] .":". $config_hash['password'] );
+		}else if(isset($config_hash['session_id'])){
+			$this->session_id = $config_hash['session_id'];
+		}else if(isset($config_hash['oauth'])){
+			$this->oauth = $config_hash['oauth'];
+		}
+
 		$this->no_ssl_verify = isset($config_hash['no_ssl_verify']) ? $config_hash['no_ssl_verify'] : false;
 		$this->suppress_rules = isset($config_hash['suppress_rules']) ? $config_hash['suppress_rules'] : false;
 		$this->base_url = self::client_url($config_hash);
+		$this->access_token = isset($config_hash['access_token']) ? $config_hash['access_token'] : false;
 	}
 }
 

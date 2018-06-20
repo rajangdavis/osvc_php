@@ -1,61 +1,32 @@
 <?php
 
 require_once(dirname(__FILE__) . '/../src/Config.php');
+require_once(dirname(__FILE__) . '/../src/Client.php');
 
 use PHPUnit\Framework\TestCase;
 
 final class ConfigTest extends TestCase
 {	
 
-	/* should take an HTTP verb and set the method property to match that verb */ 
-
-	public function testShouldTakeAnHTTPVerbAndSetTheMethodPropertyToMatchThatVerb()
-	{
-
-
-
-
-	}
-
-
-
-
-	/* should take a client object and return a hash of options settings; the "suppress_rules" setting should return headers["OSvC-CREST-Suppress-All"] as true */ 
+	/* should take a client object and return a hash of options settings; the "suppress_rules" setting should return a config object with "suppress_rules" as true */ 
 
 	public function testShouldTakeAClientObjectAndReturnAHashOfOptionsSettingsTheSuppressrulesSettingShouldReturnHeadersOSvCCRESTSuppressAllAsTrue()
 	{
 
+		$options = array(
+			"username" => "admin",
+			"password" => "password",
+			"interface" => "interfaceName",
+			"suppress_rules" => true
+		);
+
+		$config = new OSvCPHP\Config($options);
 
 
-
-	}
-
-
-
-
-	/* should take a boolean param for making PATCH requests; headers["X-HTTP-Method-Override"] as "PATCH" */ 
-
-	public function testShouldTakeABooleanParamForMakingPATCHRequestsHeadersXHTTPMethodOverrideAsPATCH()
-	{
-
-
+		$this->assertEquals(true,$config->suppress_rules);
 
 
 	}
-
-
-
-
-	/* should have headers set to undefined as a default */ 
-
-	public function testShouldHaveHeadersSetToUndefinedAsADefault()
-	{
-
-
-
-
-	}
-
 
 
 
@@ -64,7 +35,17 @@ final class ConfigTest extends TestCase
 	public function testShouldAlwaysUseHttpsAndServicesRestConnectInTheUrl()
 	{
 
+		$options = array(
+			"username" => "admin",
+			"password" => "password",
+			"interface" => "interfaceName",
+			"suppress_rules" => true
+		);
 
+		$config = new OSvCPHP\Config($options);
+
+
+		$this->assertEquals("https://interfaceName.custhelp.com/services/rest/connect/v1.3/",$config->base_url);
 
 
 	}
@@ -77,25 +58,20 @@ final class ConfigTest extends TestCase
 	public function testShouldTakeAClientObjectAndChangeTheUrlToIncludeRightnowdemoIfTheDemositeSettingIsSetToTrue()
 	{
 
+		$options = array(
+			"username" => "admin",
+			"password" => "password",
+			"interface" => "interfaceName",
+			"demo_site" => true
+		);
+
+		$config = new OSvCPHP\Config($options);
 
 
-
-	}
-
-
-
-
-	/* should take a username,password,and interface and change the url to include the interface */ 
-
-	public function testShouldTakeAUsernamepasswordandInterfaceAndChangeTheUrlToIncludeTheInterface()
-	{
-
-
+		$this->assertEquals("https://interfaceName.rightnowdemo.com/services/rest/connect/v1.3/",$config->base_url);
 
 
 	}
-
-
 
 
 	/* should take a username,password and return an authorization header for basic auth */ 
@@ -103,7 +79,17 @@ final class ConfigTest extends TestCase
 	public function testShouldTakeAUsernamepasswordAndReturnAnAuthorizationHeaderForBasicAuth()
 	{
 
+		$options = array(
+			"username" => "admin",
+			"password" => "password",
+			"interface" => "interfaceName",
+			"demo_site" => true
+		);
 
+		$config = new OSvCPHP\Config($options);
+
+
+		$this->assertEquals('YWRtaW46cGFzc3dvcmQ=',$config->login);
 
 
 	}
@@ -116,46 +102,39 @@ final class ConfigTest extends TestCase
 	public function testShouldTakeAClientObjectAndChangeTheUrlToIncludeADifferentVerionsIfTheVersionSettingIsChanged()
 	{
 
+		$options = array(
+			"username" => "admin",
+			"password" => "password",
+			"interface" => "interfaceName",
+			"version" => "latest"
+		);
+
+		$config = new OSvCPHP\Config($options);
 
 
-
-	}
-
-
-
-
-	/* should take a resource URL and change the url */ 
-
-	public function testShouldTakeAResourceURLAndChangeTheUrl()
-	{
-
-
+		$this->assertEquals("https://interfaceName.custhelp.com/services/rest/connect/latest/",$config->base_url);
 
 
 	}
 
 
 
+	/* should equal "https://interface789.rightnowdemo.com/services/rest/connect/v1.4" */ 
 
-	/* should equal "https://interface789.rightnowdemo.com/services/rest/connect/v1.4/incidents" */ 
-
-	public function testShouldEqualHttpsinterface789rightnowdemocomservicesrestconnectv14incidents()
+	public function testShouldEqualHttpsinterface789rightnowdemocomservicesrestconnectv14()
 	{
 
+		$options = array(
+			"username" => "admin",
+			"password" => "password",
+			"interface" => "interface789",
+			"version" => "v1.4"
+		);
+
+		$config = new OSvCPHP\Config($options);
 
 
-
-	}
-
-
-
-
-	/* should take a not match incidents if the resource URL is not specified */ 
-
-	public function testShouldTakeANotMatchIncidentsIfTheResourceURLIsNotSpecified()
-	{
-
-
+		$this->assertEquals("https://interface789.custhelp.com/services/rest/connect/v1.4/",$config->base_url);
 
 
 	}
@@ -168,38 +147,19 @@ final class ConfigTest extends TestCase
 	public function testVersionShouldBeV13IfNotSpecified()
 	{
 
+		$options = array(
+			"username" => "admin",
+			"password" => "password",
+			"interface" => "interface789",
+		);
+
+		$config = new OSvCPHP\Config($options);
 
 
-
-	}
-
-
-
-
-	/* "custhelp" domain will be used if not specified */ 
-
-	public function testCusthelpDomainWillBeUsedIfNotSpecified()
-	{
-
-
+		$this->assertEquals("https://interface789.custhelp.com/services/rest/connect/v1.3/",$config->base_url);
 
 
 	}
-
-
-
-
-	/* should equal "https://interface789.custhelp.com/services/rest/connect/v1.3/" */ 
-
-	public function testShouldEqualHttpsinterface789custhelpcomservicesrestconnectv13()
-	{
-
-
-
-
-	}
-
-
 
 
 	/* should be able to set a session id and it should work if retrieved */ 
@@ -207,7 +167,15 @@ final class ConfigTest extends TestCase
 	public function testShouldBeAbleToSetASessionIdAndItShouldWorkIfRetrieved()
 	{
 
+		$options = array(
+			"session_id" => "session_id_for_authentication",
+			"interface" => "interface789",
+		);
 
+		$config = new OSvCPHP\Config($options);
+
+
+		$this->assertEquals("session_id_for_authentication",$config->session_id);
 
 
 	}
@@ -220,7 +188,15 @@ final class ConfigTest extends TestCase
 	public function testShouldBeAbleToSetAnOauthTokenForAuthentication()
 	{
 
+		$options = array(
+			"oauth" => "oauth_for_authentication",
+			"interface" => "interface789",
+		);
 
+		$config = new OSvCPHP\Config($options);
+
+
+		$this->assertEquals("oauth_for_authentication",$config->oauth);
 
 
 	}
@@ -233,64 +209,20 @@ final class ConfigTest extends TestCase
 	public function testShouldBeAbleToSetAnAccessTokenForAuthentication()
 	{
 
+		$options = array(
+			"username" => "admin",
+			"password" => "password",
+			"interface" => "interface789",
+			"access_token" => "access_token_for_quality_of_service"
+		);
+
+		$config = new OSvCPHP\Config($options);
 
 
-
-	}
-
-
-
-
-	/* should be able to set optional headers */ 
-
-	public function testShouldBeAbleToSetOptionalHeaders()
-	{
-
-
+		$this->assertEquals("access_token_for_quality_of_service",$config->access_token);
 
 
 	}
-
-
-
-
-	/* should throw an error if version is set to "v1.4" and no annotation is present */ 
-
-	public function testShouldThrowAnErrorIfVersionIsSetToV14AndNoAnnotationIsPresent()
-	{
-
-
-
-
-	}
-
-
-
-
-	/* should throw an error if annotation is present but blank */ 
-
-	public function testShouldThrowAnErrorIfAnnotationIsPresentButBlank()
-	{
-
-
-
-
-	}
-
-
-
-
-	/* should throw an error if annotation is greater than 40 characters */ 
-
-	public function testShouldThrowAnErrorIfAnnotationIsGreaterThan40Characters()
-	{
-
-
-
-
-	}
-
-
 
 
 }

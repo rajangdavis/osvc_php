@@ -1,6 +1,7 @@
 <?php
 
-require_once("./src/AnalyticsReportResults.php");
+require_once("./src/Connect.php");
+require_once("./src/QueryResultsSet.php");
 
 $rn_client = new OSvCPHP\Client(array(
 	"username" => getenv("OSC_ADMIN"),
@@ -9,17 +10,27 @@ $rn_client = new OSvCPHP\Client(array(
 	"demo_site" => true
 ));
 
-$options = array(
-	"client" => $rn_client,
-	"json" => array(
-    	"limit" => 2,
-    	"lookupName" => "Incident Activity"
-	),
-	"debug" => true
+$queries = array(
+    array(
+        "query" => "DESCRIBE INCIDENTS",
+        "key" => "incidents"
+    ),
+    array(
+        "query" => "DESCRIBE SERVICEPRODUCTS",
+        "key" => "serviceProducts"
+    ),
 );
 
-$arr = new OSvCPHP\AnalyticsReportResults;
 
-$arrResults = $arr->run($options);
+$options = array(
+    "client" => $rn_client,
+    "queries" => $queries
+);
 
-echo json_encode($arrResults, JSON_PRETTY_PRINT);
+$mq = new OSvCPHP\QueryResultsSet;
+
+$results = $mq->query_set($options);
+
+
+echo json_encode($results->incidents, JSON_PRETTY_PRINT);
+echo json_encode($results->serviceProducts, JSON_PRETTY_PRINT);

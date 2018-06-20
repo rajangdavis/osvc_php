@@ -144,26 +144,32 @@ OSvCPHP\QueryResultsSet only has one function: 'query_set', which takes an OSvCP
 require_once('./osvc_php.php');
 
 $rn_client = new OSvCPHP\Client(array(
-    "username" => getenv("OSC_ADMIN"),
-    "password" => getenv("OSC_PASSWORD"),
-    "interface" => getenv("OSC_SITE"),
-    "demo_site" => true
+	"username" => getenv("OSC_ADMIN"),
+	"password" => getenv("OSC_PASSWORD"),
+	"interface" => getenv("OSC_SITE"),
+	"demo_site" => true
 ));
 
-$query_arr = array(
+$queries = array(
     array(
-        "key" => "incidents",
-        "query" => "SELECT * FROM incidents LIMIT 3"
+        "query" => "DESCRIBE INCIDENTS",
+        "key" => "incidents"
     ),
     array(
-        "key" => "answers",
-        "query" => "SELECT * FROM answers LIMIT 3"
-    )
+        "query" => "DESCRIBE SERVICEPRODUCTS",
+        "key" => "serviceProducts"
+    ),
+);
+
+
+$options = array(
+    "client" => $rn_client,
+    "queries" => $queries
 );
 
 $mq = new OSvCPHP\QueryResultsSet;
 
-$results_object = $mq->query_set($rn_client,$query_arr);
+$results_object = $mq->query_set($options);
 
 echo json_encode($results_object->incidents,JSON_PRETTY_PRINT);
 

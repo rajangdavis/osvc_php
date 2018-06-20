@@ -6,8 +6,6 @@ use OSvCPHP;
 require_once("Client.php");
 require_once("Connect.php");
 require_once("Normalize.php");
-include "Validations.php";
-include "Examples.php";
 
 class QueryResults extends Client
 {

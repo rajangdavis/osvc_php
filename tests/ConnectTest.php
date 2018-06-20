@@ -1,6 +1,7 @@
 <?php
 
 require_once(dirname(__FILE__) . '/../src/Connect.php');
+require_once(dirname(__FILE__) . '/../src/Client.php');
 
 use PHPUnit\Framework\TestCase;
 
@@ -13,9 +14,23 @@ final class ConnectTest extends TestCase
 	public function testShouldTakeAUrlAsAParamAndMakeAHTTPGETRequestWithAResponseCodeOf200AndABodyOfJSON()
 	{
 
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSC_ADMIN"),
+			"password" => getenv("OSC_PASSWORD"),
+			"interface" => getenv("OSC_SITE"),
+			"demo_site" => true
+		));
 
+		$options = array(
+			"client" => $rn_client,
+			"url" => "incidents?limit=10",
+		);
 
+		$results = OSvCPHP\Connect::get($options);
 
+		$this->assertObjectHasAttribute("items", $results);
+		$this->assertObjectHasAttribute("links", $results);
+		$this->assertObjectHasAttribute("hasMore", $results);
 	}
 
 
@@ -54,8 +69,46 @@ final class ConnectTest extends TestCase
 	public function testShouldTakeAUrlAndDebugParametersAndMakeAHTTPPOSTRequestWithAResponseCodeOf201AndABodyOfJSONObject()
 	{
 
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSC_ADMIN"),
+			"password" => getenv("OSC_PASSWORD"),
+			"interface" => getenv("OSC_SITE"),
+			"demo_site" => true
+		));
+
+		$new_product = array(
+		    'names' => array(
+		        array(
+		            'labelText' => 'NEW_PRODUCT',
+		            'language' => array('id' => 1)
+		        )
+		    ),
+		    'displayOrder' => 4,
+		    'adminVisibleInterfaces' => array(
+		        array(
+		            'id' => 1
+		        )
+		    ),
+		    'endUserVisibleInterfaces' => array(
+		        array(
+		            'id' => 1
+		        )
+		    ),
+		);
 
 
+		$options = array(
+			"client" => $rn_client,
+			"url" => "serviceProducts",
+			"json" => $new_product,
+			"debug" => true
+		);
+
+		$post_response = OSvCPHP\Connect::post($options);
+
+		$this->assertEquals($post_response['info']['http_code'], 201);
+		$this->assertArrayHasKey("body", $post_response);
+		$this->assertArrayHasKey("info", $post_response);
 
 	}
 
@@ -67,8 +120,44 @@ final class ConnectTest extends TestCase
 	public function testShouldTakeAUrlAsAParamAndMakeAHTTPPOSTRequestAndReturnAJSONObject()
 	{
 
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSC_ADMIN"),
+			"password" => getenv("OSC_PASSWORD"),
+			"interface" => getenv("OSC_SITE"),
+			"demo_site" => true
+		));
+
+		$new_product = array(
+		    'names' => array(
+		        array(
+		            'labelText' => 'NEW_PRODUCT_TEST',
+		            'language' => array('id' => 1)
+		        ) 
+		    ),
+		    'displayOrder' => 4,
+		    'adminVisibleInterfaces' => array(
+		        array(
+		            'id' => 1
+		        )
+		    ),
+		    'endUserVisibleInterfaces' => array(
+		        array(
+		            'id' => 1
+		        )
+		    ),
+		);
 
 
+		$options = array(
+			"client" => $rn_client,
+			"url" => "serviceProducts",
+			"json" => $new_product,
+		);
+
+		$post_response = OSvCPHP\Connect::post($options);
+
+		$this->assertObjectHasAttribute("id", $post_response);
+		$this->assertObjectHasAttribute("lookupName", $post_response);
 
 	}
 
@@ -120,7 +209,44 @@ final class ConnectTest extends TestCase
 	public function testShouldTakeAUrlAsAParamAndMakeAHTTPPATCHRequestWithAResponseCodeOf201AndAnEmptyBody()
 	{
 
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSC_ADMIN"),
+			"password" => getenv("OSC_PASSWORD"),
+			"interface" => getenv("OSC_SITE"),
+			"demo_site" => true
+		));
 
+		$updated_product = array(
+		    'names' => array(
+		        array(
+		            'labelText' => 'UPDATED_PRODUCT',
+		            'language' => array('id' => 1)
+		        )
+		    ),
+		    'displayOrder' => 4,
+		    'adminVisibleInterfaces' => array(
+		        array(
+		            'id' => 1
+		        )
+		    ),
+		    'endUserVisibleInterfaces' => array(
+		        array(
+		            'id' => 1
+		        )
+		    ),
+		);
+
+
+		$options = array(
+			"client" => $rn_client,
+			"url" => "serviceProducts/268",
+			"json" => $updated_product,
+			"debug" => true
+		);
+
+		$patch_response = OSvCPHP\Connect::patch($options);
+		$this->assertEquals($patch_response['info']['http_code'], 200);
+		$this->assertEquals($patch_response['body'], '');
 
 
 	}
@@ -133,8 +259,21 @@ final class ConnectTest extends TestCase
 	public function testShouldTakeAUrlAsAParamAndMakeAHTTPDELETERequestWithAResponseCodeOf404BecauseTheIncidentWithIDOf0DoesNotExist()
 	{
 
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSC_ADMIN"),
+			"password" => getenv("OSC_PASSWORD"),
+			"interface" => getenv("OSC_SITE"),
+			"demo_site" => true
+		));
 
+		$options = array(
+			"client" => $rn_client,
+			"url" => "serviceProducts/0",
+			"debug" => true
+		);
 
+		$delete_response = OSvCPHP\Connect::delete($options);
+		$this->assertEquals($delete_response['info']['http_code'], 404);
 
 	}
 
@@ -145,10 +284,74 @@ final class ConnectTest extends TestCase
 	public function testShouldBeAbleToMakeAnOPTIONSRequestAndSendBackTheHeaders()
 	{
 
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSC_ADMIN"),
+			"password" => getenv("OSC_PASSWORD"),
+			"interface" => getenv("OSC_SITE"),
+			"demo_site" => true
+		));
+
+		$options = array(
+			"client" => $rn_client,
+			"url" => "serviceProducts",
+			"debug" => true
+		);
+
+		$options_response = OSvCPHP\Connect::options($options);
+		$this->assertEquals($options_response['body'], null);
+	}
+
+
+	/* should throw an error if version is set to "v1.4" and no annotation is present */ 
+
+	public function testShouldThrowAnErrorIfVersionIsSetToV14AndNoAnnotationIsPresent()
+	{
+
 
 
 
 	}
 
+
+
+
+	/* should be able to set optional headers */ 
+
+	public function testShouldBeAbleToSetOptionalHeaders()
+	{
+
+		// exclude_null: true,
+		// next_request: 1000,
+		// schema: true,
+		// utc_time: true,
+		// annotation: "This is an annotation"
+		// $config = new OSvCPHP\Config($options);
+
+
+	}
+
+
+	/* should throw an error if annotation is present but blank */ 
+
+	public function testShouldThrowAnErrorIfAnnotationIsPresentButBlank()
+	{
+
+
+
+
+	}
+
+
+
+
+	/* should throw an error if annotation is greater than 40 characters */ 
+
+	public function testShouldThrowAnErrorIfAnnotationIsGreaterThan40Characters()
+	{
+
+
+
+
+	}
 
 }

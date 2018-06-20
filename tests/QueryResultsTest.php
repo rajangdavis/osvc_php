@@ -10,13 +10,6 @@ final class QueryResultsTest extends TestCase
 
     public function testIsAnInstanceOfQueryResults()
     {
-		
-		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
-		));
         
         $this->assertInstanceOf(
             OSvCPHP\QueryResults::class,
