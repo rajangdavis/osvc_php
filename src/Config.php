@@ -34,18 +34,22 @@ class Config
 
 	private function _set_auth($config_hash)
 	{
-		if(isset($config_hash['username']) || isset($config_hash['password'])){
-			$this->auth_header = "Basic " . self::_hidden_credentials($config_hash['username'] .":". $config_hash['password'] );
-		}else if(isset($config_hash['session_id'])){
-			$this->auth_header = "Session " . $config_hash['session_id'];
-		}else if(isset($config_hash['oauth'])){
-			$this->auth_header = "Bearer " . $config_hash['oauth'];
+		if(isset($config_hash['username'])){
+			return "Basic " . self::_hidden_credentials($config_hash['username'] .":". $config_hash['password'] );
+		}
+
+		if(isset($config_hash['session_id'])){
+			return "Session " . $config_hash['session_id'];
+		}
+
+		if(isset($config_hash['oauth'])){
+			return "Bearer " . $config_hash['oauth'];
 		}
 	}
 
 	public function __construct($config_hash)
 	{
-		$this->_set_auth($config_hash);
+		$this->auth_header = $this->_set_auth($config_hash);
 		$this->no_ssl_verify = isset($config_hash['no_ssl_verify']) ? $config_hash['no_ssl_verify'] : false;
 		$this->suppress_rules = isset($config_hash['suppress_rules']) ? $config_hash['suppress_rules'] : false;
 		$this->base_url = self::_client_url($config_hash);

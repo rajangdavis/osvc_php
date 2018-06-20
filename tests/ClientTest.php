@@ -23,7 +23,7 @@ final class ClientTest extends TestCase
         );
     }
 
-	/* should take "username", "password", and "interface" values and return a config hash with a base_url, and encoded login*/ 
+	/* should take "username", "password", and "interface" values and return a config hash with a base_url, and encoded auth_header*/ 
 
 	public function testShouldTakeUsernamePasswordAndInterfaceValuesFromAndObjectAndMatchThem()
 	{
@@ -41,8 +41,8 @@ final class ClientTest extends TestCase
 
 		$testable_config = $property->getValue($rn_client);
 
-        $this->assertObjectHasAttribute('login',$testable_config);
-        $this->assertEquals($testable_config->login,"QWRtaW46QWRtaW4gUGFzc3dvcmQ=");
+        $this->assertObjectHasAttribute('auth_header',$testable_config);
+        $this->assertEquals($testable_config->auth_header,"Basic QWRtaW46QWRtaW4gUGFzc3dvcmQ=");
 
         $this->assertObjectHasAttribute('base_url', $testable_config);
 
