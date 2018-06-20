@@ -7,7 +7,7 @@
             <!-- this is the path of the files included in your clover report -->
             <directory suffix=".php">./src</directory>
             <exclude>
-             <file>Examples.php</file>
+             <file>./src/Examples.php</file>
             </exclude>
         </whitelist>
     </filter>
