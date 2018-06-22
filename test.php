@@ -6,13 +6,25 @@ $rn_client = new OSvCPHP\Client(array(
 	"username" => getenv("OSC_ADMIN"),
 	"password" => getenv("OSC_PASSWORD"),
 	"interface" => getenv("OSC_SITE"),
-	"demo_site" => true
+	"demo_site" => true,
+    "version" => "latest"
 ));
 
 $options = array(
+    "debug" => true,
     "client" => $rn_client,
-    "url" => '/incidents/25871/fileAttachments?download'
+    "url" => "incidents",
+    "json" =>  array(
+        "primaryContact"=>  array(
+            "id"=>  2
+        ),
+        "subject"=>  "FishPhone not working"
+    ),
+     "files" => array(
+        "./License.txt",
+    ),
+    "annotation" => "shorter annotation"
 );
 
-$get_response = OSvCPHP\Connect::get($options);
-echo json_encode($get_response,JSON_PRETTY_PRINT);
+$post_response = OSvCPHP\Connect::options($options);
+echo json_encode($post_response,JSON_PRETTY_PRINT);

@@ -200,7 +200,33 @@ final class ConnectTest extends TestCase
 	public function testShouldUploadOneFile()
 	{
 
-		
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSC_ADMIN"),
+			"password" => getenv("OSC_PASSWORD"),
+			"interface" => getenv("OSC_SITE"),
+			"demo_site" => true
+		));
+
+		$options = array(
+		    "client" => $rn_client,
+		    "url" => "incidents",
+		    "json" =>  array(
+		        "primaryContact"=>  array(
+		            "id"=>  2
+		        ),
+		        "subject"=>  "FishPhone not working"
+		    ), "files" => array(
+		        "./test.php",
+		    )
+		);
+
+		$post_response = OSvCPHP\Connect::post($options);
+		$this->assertObjectHasAttribute("id", $post_response);
+		$options['url'] .= "/$post_response->id/fileAttachments";
+
+		$get_response = OSvCPHP\Connect::get($options);
+
+		$this->assertEquals(1, sizeof($get_response->items));
 
 
 	}
@@ -214,21 +240,67 @@ final class ConnectTest extends TestCase
 	{
 
 
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSC_ADMIN"),
+			"password" => getenv("OSC_PASSWORD"),
+			"interface" => getenv("OSC_SITE"),
+			"demo_site" => true
+		));
 
+		$options = array(
+		    "client" => $rn_client,
+		    "url" => "incidents",
+		    "json" =>  array(
+		        "primaryContact"=>  array(
+		            "id"=>  2
+		        ),
+		        "subject"=>  "FishPhone not working"
+		    ), "files" => array(
+		        "./test.php",
+		        "./License.txt",
+		    )
+		);
 
+		$post_response = OSvCPHP\Connect::post($options);
+		$this->assertObjectHasAttribute("id", $post_response);
+
+		$options['url'] .= "/$post_response->id/fileAttachments";
+
+		$get_response = OSvCPHP\Connect::get($options);
+		$this->assertEquals(2, sizeof($get_response->items));
 	}
 
 
 
+	/**
+     * @expectedException Exception
+     */
 
 	/* should return an error if a file does not exist in the specified file location */ 
-
 	public function testShouldReturnAnErrorIfAFileDoesNotExistInTheSpecifiedFileLocation()
 	{
 
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSC_ADMIN"),
+			"password" => getenv("OSC_PASSWORD"),
+			"interface" => getenv("OSC_SITE"),
+			"demo_site" => true
+		));
 
+		$options = array(
+		    "client" => $rn_client,
+		    "url" => "incidents",
+		    "json" =>  array(
+		        "primaryContact"=>  array(
+		            "id"=>  2
+		        ),
+		        "subject"=>  "FishPhone not working"
+		    ), "files" => array(
+		        "./NonExistentFile",
+		    )
+		);
 
-
+		$post_response = OSvCPHP\Connect::post($options);
 	}
 
 
@@ -332,16 +404,60 @@ final class ConnectTest extends TestCase
 	}
 
 
+
+	/**
+     * @expectedException Exception
+     */
+
 	/* should throw an error if version is set to "v1.4" and no annotation is present */ 
 
 	public function testShouldThrowAnErrorIfVersionIsSetToV14AndNoAnnotationIsPresent()
 	{
 
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => "OSC_ADMIN",
+			"password" => "OSC_PASSWORD",
+			"interface" => "OSC_SITE",
+			"version" => "v1.4"
+		));
 
+		$options = array(
+			"client" => $rn_client,
+			"url" => "serviceProducts",
+			"debug" => true
+		);
+
+		$options_response = OSvCPHP\Connect::options($options);
 
 
 	}
 
+
+	/**
+     * @expectedException Exception
+     */
+
+	/* should throw an error if annotation is greater than 40 characters */ 
+
+	public function testShouldThrowAnErrorIfAnnotationIsGreaterThan40Characters()
+	{
+
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSC_ADMIN"),
+			"password" => getenv("OSC_PASSWORD"),
+			"interface" => getenv("OSC_SITE"),
+			"version" => "v1.4"
+		));
+
+		$options = array(
+			"client" => $rn_client,
+			"url" => "serviceProducts",
+			"annotation" => "a super duper long annotation that should raise an exception"
+		);
+
+		$options_response = OSvCPHP\Connect::options($options);
+
+	}
 
 
 
@@ -349,39 +465,29 @@ final class ConnectTest extends TestCase
 
 	public function testShouldBeAbleToSetOptionalHeaders()
 	{
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => "OSC_ADMIN",
+			"password" => "OSC_PASSWORD",
+			"interface" => "OSC_SITE",
+			"version" => "v1.4"
+		));
 
-		// exclude_null: true,
-		// next_request: 1000,
-		// schema: true,
-		// utc_time: true,
-		// annotation: "This is an annotation"
-		// $config = new OSvCPHP\Config($options);
+		$options = array(
+			"client" => $rn_client,
+			"url" => "serviceProducts",
+			"exclude_null" => true,
+			"next_request" => 1000,
+			"schema" => true,
+			"utc_time" => true,
+			"annotation" => "This is an annotation"
+		);
 
+		$method = new ReflectionMethod("OSvCPHP\Connect", "_optional_headers");
+		$method->setAccessible(true);
 
-	}
+		$headers =  $method->invoke(new OSvCPHP\Connect, $options, array());
 
-
-	/* should throw an error if annotation is present but blank */ 
-
-	public function testShouldThrowAnErrorIfAnnotationIsPresentButBlank()
-	{
-
-
-
-
-	}
-
-
-
-
-	/* should throw an error if annotation is greater than 40 characters */ 
-
-	public function testShouldThrowAnErrorIfAnnotationIsGreaterThan40Characters()
-	{
-
-
-
-
+		$this->assertArraySubset($headers, array("prefer: exclude-null-properties","osvc-crest-next-request-after: 1000","Accept: application/schema+json","OSvC-CREST-Time-UTC: yes"));
 	}
 
 }

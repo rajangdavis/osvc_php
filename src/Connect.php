@@ -16,12 +16,14 @@ class Connect extends Client
 
 	static function post($options)
 	{
-		return self::_curl_generic($options,"POST");
+		$check_for_upload = self::_upload_check($options);
+		return self::_curl_generic($check_for_upload,"POST");
 	}	
 
 	static function patch($options)
 	{
-		return self::_curl_generic($options,"PATCH");	
+		$check_for_upload = self::_upload_check($options);
+		return self::_curl_generic($check_for_upload,"PATCH");	
 	}	
 
 	static function delete($options)
@@ -53,8 +55,8 @@ class Connect extends Client
 	private static function _init_curl($options, $method)
 	{
 		$curl = curl_init();
-		$urlSetForCurl = self::_set_url($options,$curl);
-		return self::_config_curl($options,$urlSetForCurl,$method);
+		$url_set_for_curl = self::_set_url($options,$curl);
+		return self::_config_curl($options,$url_set_for_curl,$method);
 				
 	}
 
@@ -74,6 +76,27 @@ class Connect extends Client
 		return self::_set_method($options, $curl, $method);
 	}
 
+	private static function _check_annotation($options, $headers)
+	{
+		if(preg_match('/v1\.4|latest/', $options['client']->config->base_url) && !isset($options['annotation']) ){
+			$err = "Annotation must be set";
+			$example = NO_ANNOTATION_EXAMPLE;
+
+			return Validations::custom_error($err,$example);
+		}else if(isset($options['annotation']) && strlen($options['annotation']) > 40){
+			$err = "Annotation must 40 characters or less";
+			$example = ANNOTATION_MUST_BE_FORTY_CHARACTERS_EXAMPLE;
+
+			return Validations::custom_error($err,$example);
+		}
+
+		if(preg_match('/v1\.4|latest/', $options['client']->config->base_url) && isset($options['annotation']) && strlen($options['annotation']) <= 40){
+			array_push($headers, "OSvC-CREST-Application-Context: " . $options['annotation']);
+		}
+
+		return $headers;
+	}
+
 	private static function _set_method($options, $curl, $method)
 	{
 		$headers = self::_init_headers($options);
@@ -87,8 +110,7 @@ class Connect extends Client
 
 		if ($method == "PATCH"){
 			array_push($headers,"X-HTTP-Method-Override: PATCH");
-		}
-		else{
+		}else{
 			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
 		}
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
@@ -102,6 +124,28 @@ class Connect extends Client
 		return $curl;
 	}
 
+	private static function _optional_headers($options,$headers){
+		
+		if(isset($options["exclude_null"]) && $options["exclude_null"] === true){
+			array_push($headers, "prefer: exclude-null-properties");
+		}
+
+		if(isset($options["next_request"]) && gettype($options["next_request"]) == "integer" && $options["next_request"] > 0){
+			array_push($headers, "osvc-crest-next-request-after: " . $options["next_request"]);
+		}
+
+		if(isset($options["schema"]) && $options["schema"] === true){
+			array_push($headers,  "Accept: application/schema+json");
+		}
+
+		if(isset($options["utc_time"]) && $options["utc_time"] === true){
+			array_push($headers, "OSvC-CREST-Time-UTC: yes" );
+		}
+
+		return $headers;
+	}
+
+
 	private static function _init_headers($options)
 	{
 		$headers = array(
@@ -111,11 +155,15 @@ class Connect extends Client
 			"Keep-Alive: timeout=1, max=1000"
 		);
 
+		$headers = self::_check_annotation($options, $headers);
+
 		if(isset($options['client']->config->access_token)){
 			array_push($headers,"osvc-crest-api-access-token: " . $options['client']->config->access_token);
 		} 
 
 		if($options['client']->config->suppress_rules) array_push($headers,"OSvC-CREST-Suppress-All : true");
+		
+		$headers = self::_optional_headers($options, $headers);
 		return $headers;
 	}
 
@@ -167,7 +215,10 @@ class Connect extends Client
 
 			//If $fp is FALSE, something went wrong.
 			if($fp === false){
-			    throw new Exception('Could not open: ' . $file_name);
+			    $err = "File $file_name does not exist. Make sure you set your filepath in the files property in the options array.";
+				$example = BAD_FILE_EXAMPLE;
+
+				return Validations::custom_error($err,$example);				
 			}
 
 			$options['file_name'] = $file_name;
@@ -179,5 +230,35 @@ class Connect extends Client
 			return $options;
 		}
 	}
+
+	private static function	_upload_check($options)
+	{
+		
+		if(isset($options['files'])){
+			
+			$options["json"]["fileAttachments"] = array();
+			
+			foreach ($options['files'] as $file) {
+				if(file_exists($file)){
+					
+					$file_data = array(
+						"fileName" => basename($file),
+						"data" => base64_encode(file_get_contents($file))
+					);
+
+					array_push($options["json"]["fileAttachments"], $file_data);
+				}else{
+					
+					$err = "File $file does not exist. Make sure you set your filepath in the files property in the options array.";
+					$example = BAD_FILE_EXAMPLE;
+
+					return Validations::custom_error($err,$example);
+				}
+			}
+		}
+		
+		return $options;
+	}
+
 }
 

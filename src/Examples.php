@@ -216,3 +216,103 @@ require __DIR__ . '/vendor/autoload.php';
     \033[32m\"interface\" => getenv(\"OSC_SITE\")\033[0m
 ));
 ");
+
+
+define('BAD_FILE_EXAMPLE', 
+"
+
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+
+\$rn_client = new OSvCPHP\Client(array(
+    \"username\" => getenv(\"OSC_ADMIN\"),
+    \"password\" => getenv(\"OSC_PASSWORD\"),
+    \"interface\" => getenv(\"OSC_SITE\"),
+    \"demo_site\" => true
+));
+
+\$options = array(
+    \"client\" => \$rn_client,
+    \"url\" => \"incidents\",
+    \"json\" =>  array(
+        \"primaryContact\"=>  array(
+            \"id\"=>  2
+        ),
+        \"subject\"=>  \"FishPhone not working\"
+    ),
+    \033[32m\"files\"\033[0m => array(
+        \033[32m\"./haQE7EIDQVUyzoLDha2SRVsP415IYK8_ocmxgMfyZaw.png\"\033[0m,
+        \"./License.txt\",
+    )
+);
+
+\$post_response = OSvCPHP\Connect::post(\$options);
+echo json_encode(\$post_response,JSON_PRETTY_PRINT);
+");
+
+define('NO_ANNOTATION_EXAMPLE', 
+"
+
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+
+\$rn_client = new OSvCPHP\Client(array(
+    \"username\" => getenv(\"OSC_ADMIN\"),
+    \"password\" => getenv(\"OSC_PASSWORD\"),
+    \"interface\" => getenv(\"OSC_SITE\"),
+    \"version\" => \"latest\"
+));
+
+
+
+\$options = array(
+    \"client\" => \$rn_client,
+    \"url\" => \"incidents\",
+    \"json\" =>  array(
+        \"primaryContact\"=>  array(
+            \"id\"=>  2
+        ),
+    \"subject\"=>  \"FishPhone not working\"
+    ),
+    \033[32m\"annotation\" => \"This is an annotation\"\033[0m,
+        
+);
+
+\$post_response = OSvCPHP\Connect::post(\$options);
+echo json_encode(\$post_response,JSON_PRETTY_PRINT);
+");
+
+define('ANNOTATION_MUST_BE_FORTY_CHARACTERS_EXAMPLE', 
+"
+
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+
+\$rn_client = new OSvCPHP\Client(array(
+    \"username\" => getenv(\"OSC_ADMIN\"),
+    \"password\" => getenv(\"OSC_PASSWORD\"),
+    \"interface\" => getenv(\"OSC_SITE\"),
+    \"version\" => \"latest\"
+));
+
+
+
+\$options = array(
+    \"client\" => \$rn_client,
+    \"url\" => \"incidents\",
+    \"json\" =>  array(
+        \"primaryContact\"=>  array(
+            \"id\"=>  2
+        ),
+    \"subject\"=>  \"FishPhone not working\"
+    ),
+    \033[32m\"annotation\" => \"Short message\"\033[0m,
+        
+);
+
+\$post_response = OSvCPHP\Connect::post(\$options);
+echo json_encode(\$post_response,JSON_PRETTY_PRINT);
+");
