@@ -45,19 +45,17 @@ class Connect extends Client
 				// and setting any json if there is any
 		// Then you run curl			
 
-
 	private static function _curl_generic($options, $method = "GET")
 	{
 		$curl = self::_init_curl($options, $method); 
 		return self::_run_curl($options, $curl);
 	}
 
-	private static function _init_curl($options, $method)
+	static function _init_curl($options, $method)
 	{
 		$curl = curl_init();
 		$url_set_for_curl = self::_set_url($options,$curl);
-		return self::_config_curl($options,$url_set_for_curl,$method);
-				
+		return self::_config_curl($options,$url_set_for_curl,$method);		
 	}
 
 	private static function _set_url($options,$curl)
@@ -113,6 +111,7 @@ class Connect extends Client
 		}else{
 			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
 		}
+
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 		return self::_set_json_to_fields($options,$curl, $method);
 	}

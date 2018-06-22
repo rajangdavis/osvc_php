@@ -11,6 +11,7 @@ namespace OSvCPHP{
 
 	class Client
 	{
+		// public $config;
 		protected $config;
 
 		public function __construct($config_hash = null)
