@@ -10,7 +10,8 @@ class Connect extends Client
 
 	static function get($options)
 	{
-		return self::_curl_generic(self::_download_check($options),"GET");
+		$check_for_download = self::_download_check($options);
+		return self::_curl_generic($check_for_download,"GET");
 	}	
 
 	static function post($options)
@@ -25,7 +26,7 @@ class Connect extends Client
 
 	static function delete($options)
 	{
-		return self::_curl_generic($options,"DELETE");	
+		return self::_curl_generic($options,"DELETE");
 	}
 
 	static function options($options)
@@ -97,6 +98,7 @@ class Connect extends Client
 	private static function _set_json_to_fields($options,$curl, $method)
 	{
 		if (($method == "POST" || "PATCH") && isset($options['json'])) curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($options['json']));
+		if(isset($options['file_name']) && $options['file_reference']) curl_setopt($curl, CURLOPT_FILE, $options['file_reference']);
 		return $curl;
 	}
 
@@ -139,9 +141,43 @@ class Connect extends Client
 	private static function	_download_check($options)
 	{
 		if(strrpos($options["url"],"?download") == true){
+			$original_url = $options["url"];
+			$fetch_name_url = str_replace("?download", "", $options["url"]);
+			// $revised_options = new \ArrayObject($options);
+			// $copied_options = $revised_options->getArrayCopy();
+			$options['url'] = $fetch_name_url;
+
+			// this is so we can get the fileName
+			$file_info = self::get($options);
 			
+			// revert back
+			$options['url'] = $original_url;
+
+			if(isset($file_info->fileName)){
+				$file_name = $file_info->fileName;
+			}else if(!isset($file_info->status)){
+				$file_name = "downloadedAttachment.tgz";
+			}else{
+				return $options;
+			}
+			
+			// modified from http://thisinterestsme.com/downloading-files-curl-php/
+			//Open file handler.
+			$fp = fopen($file_name, 'w+');
+
+			//If $fp is FALSE, something went wrong.
+			if($fp === false){
+			    throw new Exception('Could not open: ' . $file_name);
+			}
+
+			$options['file_name'] = $file_name;
+			$options['file_reference'] = $fp;
+
+			return $options;
+
+		}else{
+			return $options;
 		}
-		return $options;
 	}
 }
 

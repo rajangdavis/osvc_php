@@ -42,9 +42,23 @@ final class ConnectTest extends TestCase
 	public function testShouldDownloadAFileIfThereIsADownloadQueryParameter()
 	{
 
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSC_ADMIN"),
+			"password" => getenv("OSC_PASSWORD"),
+			"interface" => getenv("OSC_SITE"),
+			"demo_site" => true
+		));
 
+		$options = array(
+		    "client" => $rn_client,
+		    "url" => '/incidents/25872/fileAttachments/417?download'
+		);
 
-
+		$get_response = OSvCPHP\Connect::get($options);
+		$this->assertEquals(1, $get_response);
+		$this->assertFileExists("./haQE7EIDQVUyzoLDha2SRVsP415IYK8_ocmxgMfyZaw.png");
+		unlink("./haQE7EIDQVUyzoLDha2SRVsP415IYK8_ocmxgMfyZaw.png");
+		$this->assertFileNotExists("./haQE7EIDQVUyzoLDha2SRVsP415IYK8_ocmxgMfyZaw.png");
 	}
 
 
@@ -55,7 +69,23 @@ final class ConnectTest extends TestCase
 	public function testShouldCreateATgzFileIfThereIsADownloadQueryParameterAndMultipleFiles()
 	{
 
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSC_ADMIN"),
+			"password" => getenv("OSC_PASSWORD"),
+			"interface" => getenv("OSC_SITE"),
+			"demo_site" => true
+		));
 
+		$options = array(
+		    "client" => $rn_client,
+		    "url" => '/incidents/25872/fileAttachments?download'
+		);
+
+		$get_response = OSvCPHP\Connect::get($options);
+		$this->assertEquals(1, $get_response);
+		$this->assertFileExists("./downloadedAttachment.tgz");
+		unlink("./downloadedAttachment.tgz");
+		$this->assertFileNotExists("./downloadedAttachment.tgz");
 
 
 	}
@@ -170,7 +200,7 @@ final class ConnectTest extends TestCase
 	public function testShouldUploadOneFile()
 	{
 
-
+		
 
 
 	}

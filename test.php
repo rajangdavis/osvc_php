@@ -1,7 +1,6 @@
 <?php
 
 require_once("./src/Connect.php");
-require_once("./src/QueryResultsSet.php");
 
 $rn_client = new OSvCPHP\Client(array(
 	"username" => getenv("OSC_ADMIN"),
@@ -10,27 +9,10 @@ $rn_client = new OSvCPHP\Client(array(
 	"demo_site" => true
 ));
 
-$queries = array(
-    array(
-        "query" => "DESCRIBE INCIDENTS",
-        "key" => "incidents"
-    ),
-    array(
-        "query" => "DESCRIBE SERVICEPRODUCTS",
-        "key" => "serviceProducts"
-    ),
-);
-
-
 $options = array(
     "client" => $rn_client,
-    "queries" => $queries
+    "url" => '/incidents/25871/fileAttachments?download'
 );
 
-$mq = new OSvCPHP\QueryResultsSet;
-
-$results = $mq->query_set($options);
-
-
-echo json_encode($results->incidents, JSON_PRETTY_PRINT);
-echo json_encode($results->serviceProducts, JSON_PRETTY_PRINT);
+$get_response = OSvCPHP\Connect::get($options);
+echo json_encode($get_response,JSON_PRETTY_PRINT);
