@@ -34,7 +34,7 @@ The features that work to date are as follows:
 	3. For updating objects, make a [PATCH request with the OSvCPHP\Connect Object](#patch)
 	4. For deleting objects, make a [DELETE request with the OSvCPHP\Connect Object](#delete)
 	5. For looking up options for a given URL, make an [OPTIONS request with the OSvCPHP\Connect Object](#options)
-2. Running ROQL queries [either 1 at a time](#oscphpqueryresults-example) or [multiple queries in a set](#osvcphpqueryresultsset-example)
+2. Running ROQL queries [either 1 at a time](#osvcphpqueryresults-example) or [multiple queries in a set](#osvcphpqueryresultsset-example)
 3. [Running Reports](#osvcphpanalyticsreportsresults)
 4. [Optional Settings](#optional-settings)
 
