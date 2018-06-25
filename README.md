@@ -20,7 +20,9 @@ Install with composer:
    
 ## Compatibility
 
-This PHP library tested against Oracle Service Cloud May 2017 using PHP 7.2.1. I _might_ set up Travis CI and Code Climate, it just depends if I find it worth my time.
+This PHP library tested against Oracle Service Cloud May 2017 using PHP 7.2.1. 
+
+It is tested against versions 7.2.1 and 5.6.2 on Travis CI.
 
 All of the HTTP methods should work on any version of Oracle Service Cloud since version May 2015; however, there maybe some issues with querying items on any version before May 2016. This is because ROQL queries were not exposed via the REST API until May 2016.
 

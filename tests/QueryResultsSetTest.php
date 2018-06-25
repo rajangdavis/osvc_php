@@ -236,5 +236,44 @@ final class QueryResultsSetTest extends TestCase
 
 	}
 
+	public function testShouldTakeAnOptionsObjectWithMultipleQueriesAndAParallelOptionSetToTrueAndMakeAHTTPGETRequest()
+	{
+
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSC_ADMIN"),
+			"password" => getenv("OSC_PASSWORD"),
+			"interface" => getenv("OSC_SITE"),
+			"demo_site" => true
+		));
+
+		$queries = array(
+		    array(
+		        "query" => "DESCRIBE INCIDENTS",
+		        "key" => "incidents"
+		    ),
+		    array(
+		        "query" => "DESCRIBE SERVICEPRODUCTS",
+		        "key" => "serviceProducts"
+		    ),
+		);
+
+
+		$options = array(
+		    "client" => $rn_client,
+		    "queries" => $queries,
+		    "parallel" => true
+		);
+
+		$mq = new OSvCPHP\QueryResultsSet;
+
+		$results = $mq->query_set($options);
+
+
+		$this->assertInternalType('object',$results);
+		$this->assertInternalType('array',$results->incidents);
+		$this->assertInternalType('array',$results->serviceProducts);
+
+
+	}
 
 }
