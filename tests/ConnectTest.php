@@ -216,7 +216,7 @@ final class ConnectTest extends TestCase
 		        ),
 		        "subject"=>  "FishPhone not working"
 		    ), "files" => array(
-		        "./test.php",
+		        "./composer.json",
 		    )
 		);
 
@@ -256,7 +256,7 @@ final class ConnectTest extends TestCase
 		        ),
 		        "subject"=>  "FishPhone not working"
 		    ), "files" => array(
-		        "./test.php",
+		        "./composer.json",
 		        "./License.txt",
 		    )
 		);

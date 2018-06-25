@@ -9,7 +9,6 @@ An (under development) PHP library for using the [Oracle Service Cloud REST API]
 
 ## Installing PHP (for Windows)
 [Here is a Youtube video with instructions for Windows 10](https://www.youtube.com/watch?v=D-wFWUMHcUA). I would highly recommend installing PHP 7.  
-
 If you get SSL Errors (you probably will), follow [this link for instructions on resolving SSL things that I know nothing about](https://stackoverflow.com/a/18972719/2548452).
    
 ## Installation
@@ -26,40 +25,28 @@ It is tested against versions 7.2.1 and 5.6.2 on Travis CI.
 
 All of the HTTP methods should work on any version of Oracle Service Cloud since version May 2015; however, there maybe some issues with querying items on any version before May 2016. This is because ROQL queries were not exposed via the REST API until May 2016.
 
-## Use Cases
-You can use this PHP Library for basic scripting and microservices. The main features that work to date are as follows:
+## Basic Usage
+The features that work to date are as follows:
 
-1. [Simple configuration](#client-configuration)
-2. Running ROQL queries [1 at a time](#osvcphpqueryresults-example)
-or [multiple queries in a set](#osvcphpqueryresultsset-example) 
+1. [HTTP Methods](#http-methods)
+	1. For creating objects and [uploading one or more file attachments](#uploading-file-attachments), make a [POST request with the OSvCPHP\Connect Object](#post)
+	2. For reading objects and [downloading one or more file attachments](#downloading-file-attachments), make a [GET request with the OSvCPHP\Connect Object](#get)
+	3. For updating objects, make a [PATCH request with the OSvCPHP\Connect Object](#patch)
+	4. For deleting objects, make a [DELETE request with the OSvCPHP\Connect Object](#delete)
+	5. For looking up options for a given URL, make an [OPTIONS request with the OSvCPHP\Connect Object](#options)
+2. Running ROQL queries [either 1 at a time](#oscphpqueryresults-example) or [multiple queries in a set](#osvcphpqueryresultsset-example)
 3. [Running Reports](#osvcphpanalyticsreportsresults)
-4. Basic CRUD Operations via HTTP Methods
-	1. [Create => Post](#create)
-	2. [Read => Get](#read)
-	3. [Update => Patch](#update)
-	4. [Destroy => Delete](#delete)
+4. [Optional Settings](#optional-settings)
 
-<!--
-## Installation
+Here are the _spicier_ (more advanced) features:
 
- Add this line to your application's Gemfile:
+1. [Bulk Delete](#bulk-delete)
+2. [Running multiple ROQL Queries in parallel](#running-multiple-roql-queries-in-parallel)
+3. [Performing Session Authentication](#performing-session-authentication)
 
-```php
-gem 'osc_ruby'
-```
+## Authentication
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install osc_ruby -->
-
-
-## Client Configuration
-
-An OSvCPHP\Client object lets the library know which credentials and interface to use for interacting with the Oracle Service Cloud REST API.
+An OSvCPHP\Client class lets the library know which credentials and interface to use for interacting with the Oracle Service Cloud REST API.
 This is helpful if you need to interact with multiple interfaces or set different headers for different objects.
 
 ```php
@@ -67,471 +54,105 @@ This is helpful if you need to interact with multiple interfaces or set differen
 // Configuration is as simple as requiring the library
 // and passing in an associative array
 
-require_once('./osvc_php.php');
+require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
 	"username" => getenv("OSC_ADMIN"),			# => These are interface credentials
 	"password" => getenv("OSC_PASSWORD"),			# => store these in environmental
 	"interface" => getenv("OSC_SITE"),			# => variables in your .bash_profile
 
+	// Session Authentication
+	// "session" => <session ID>,
+
+	// OAuth Token Authentication
+	// "oauth" => <oauth token>,
+
 	### optional configuration
-	# Turns off SSL verification; don't use in production
-	"no_ssl_verify" => true,				# => Defaults to false. 
-	
+	# Use 'rightnowdemo' namespace instead of 'custhelp'
+	"demo_site" => true					# => Defaults to false. 
+
 	# Sets the version of the REST API to use
 	"version" => 'v1.4',					# => Defaults to 'v1.3'. 
+	
+	# Turns off SSL verification; don't use in production
+	"no_ssl_verify" => true,				# => Defaults to false. 
 	
 	# Let's you supress business rules
 	"suppress_rules" => true,				# => Defaults to false. 
 	
-	# Use 'rightnowdemo' namespace instead of 'custhelp'
-	"demo_site" => true					# => Defaults to false. 
-));
-```
-
-
-## OSvCPHP\QueryResults example
-
-This is for running one ROQL query. Whatever is allowed by the REST API (limits and sorting) is allowed with this library.
-
-OSvCPHP\QueryResults only has one function: 'query', which takes an OSvCPHP\Client string and string query (example below).
-
-```php
-# NOTE: Make sure to put your queries WRAPPED in doublequotes("")
-# this is because when Ruby converts the queries into a URI
-# the REST API does not like it when the queries are WRAPPED in single quotes ('')
-
-# For example
-# "parent is null and lookupName!='Unsure'" => great!
-# 'parent is null and lookupName!="Unsure"' => don't do this
-# it will spit back an error from the REST API!
-
-require_once('./osvc_php.php');
-
-$rn_client = new OSvCPHP\Client(array(
-    "username" => getenv("OSC_ADMIN"),
-    "password" => getenv("OSC_PASSWORD"),
-    "interface" => getenv("OSC_SITE")
+	# Adds an access token to ensure quality of service
+	"access_token" =>  "My access token" 		
 ));
 
-$query = "select * from answers where ID = 1557";
-
-$q = new OSvCPHP\QueryResults;
-
-$q->query($rn_client,$query); # => "[{'id':1557,'name':...}]"
 
 ```
+## Optional Settings
 
+In addition to a client to specify which credentials, interface, and CCOM version to use, you will need to create an options object to pass in the client as well as specify any additional parameters that you may wish to use.
 
-
-
-
-
-
-
-
-
-## OSvCPHP\QueryResultsSet example
-
-This is for running multiple queries and assigning the results of each query to a key for further manipulation.
-
-OSvCPHP\QueryResultsSet only has one function: 'query_set', which takes an OSvCPHP\Client object and multiple query associative arrays (example below).
-
-```php
-# NOTE: Make sure to put your queries WRAPPED in doublequotes("")
-# Pass in each query into a hash
-    # set query: to the query you want to execute
-    # set key: to the value you want the results to of the query to be referenced to
-
-require_once('./osvc_php.php');
-
-$rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
-	"demo_site" => true
-));
-
-$queries = array(
-    array(
-        "query" => "DESCRIBE INCIDENTS",
-        "key" => "incidents"
-    ),
-    array(
-        "query" => "DESCRIBE SERVICEPRODUCTS",
-        "key" => "serviceProducts"
-    ),
-);
-
-
-$options = array(
-    "client" => $rn_client,
-    "queries" => $queries
-);
-
-$mq = new OSvCPHP\QueryResultsSet;
-
-$results_object = $mq->query_set($options);
-
-echo json_encode($results_object->incidents,JSON_PRETTY_PRINT);
-
-#[
-#    {
-#        "id": "21",
-#        "lookupName": "160311-000001",
-#        "createdTime": "2016-02-23T19:00:00Z",
-#        "updatedTime": "2016-06-14T20:31:40Z",
-#        "asset": null,
-#        "category": "3",
-#        "channel": "3",
-#        "chatQueue": null,
-#        "closedTime": null,
-#        "createdByAccount": "6",
-#        "disposition": "13",
-#        "initialResponseDueTime": "2016-02-23T19:00:00Z",
-#        "initialSolutionTime": "2016-02-23T19:00:00Z",
-#        "interface": "1",
-#        "language": "1",
-#        "lastResponseTime": "2016-02-23T19:00:00Z",
-#        "lastSurveyScore": null,
-#        "mailbox": null,
-#        "mailing": null,
-#        "organization": null,
-#        "product": "8",
-#        "queue": null,
-#        "referenceNumber": "160311-000001",
-#        "resolutionInterval": "-1440",
-#        "responseEmailAddressType": "0",
-#        "responseInterval": null,
-#        "severity": null,
-#        "smartSenseCustomer": null,
-#        "smartSenseStaff": null,
-#        "source": "8001",
-#        "subject": "How long until I receive my refund on my credit card?"
-#    },
-#    {
-#        "id": "22",
-#        "lookupName": "160311-000002",
-#        "createdTime": "2016-02-23T19:00:00Z",
-#        "updatedTime": "2016-06-14T20:31:40Z",
-#        "asset": null,
-#        "category": "3",
-#        "channel": "3",
-#        "chatQueue": null,
-#        "closedTime": null,
-#        "createdByAccount": "6",
-#        "disposition": "13",
-#        "initialResponseDueTime": "2016-02-23T19:00:00Z",
-#        "initialSolutionTime": "2016-02-23T19:00:00Z",
-#        "interface": "1",
-#        "language": "1",
-#        "lastResponseTime": "2016-02-23T19:00:00Z",
-#        "lastSurveyScore": null,
-#        "mailbox": null,
-#        "mailing": null,
-#        "organization": null,
-#        "product": "8",
-#        "queue": null,
-#        "referenceNumber": "160311-000002",
-#        "resolutionInterval": "-1440",
-#        "responseEmailAddressType": "0",
-#        "responseInterval": null,
-#        "severity": null,
-#        "smartSenseCustomer": null,
-#        "smartSenseStaff": null,
-#        "source": "8001",
-#        "subject": "Do you ship outside the US?"
-#    },
-#    {
-#        "id": "23",
-#        "lookupName": "160311-000003",
-#        "createdTime": "2016-02-23T19:00:00Z",
-#        "updatedTime": "2016-06-14T20:31:40Z",
-#        "asset": null,
-#        "category": "3",
-#        "channel": "3",
-#        "chatQueue": null,
-#        "closedTime": null,
-#        "createdByAccount": "6",
-#        "disposition": "13",
-#        "initialResponseDueTime": "2016-02-23T19:00:00Z",
-#        "initialSolutionTime": "2016-02-23T19:00:00Z",
-#        "interface": "1",
-#        "language": "1",
-#        "lastResponseTime": "2016-02-23T19:00:00Z",
-#        "lastSurveyScore": null,
-#        "mailbox": null,
-#        "mailing": null,
-#        "organization": null,
-#        "product": "8",
-#        "queue": null,
-#        "referenceNumber": "160311-000003",
-#        "resolutionInterval": "-1440",
-#        "responseEmailAddressType": "0",
-#        "responseInterval": null,
-#        "severity": null,
-#        "smartSenseCustomer": null,
-#        "smartSenseStaff": null,
-#        "source": "8001",
-#        "subject": "How can I order another product manual?"
-#    }
-#]
-
-echo json_encode($results_object->answers,JSON_PRETTY_PRINT);
-
-#[
-#    {
-#        "id": "1",
-#        "lookupName": "1",
-#        "createdTime": "2016-03-04T18:25:50Z",
-#        "updatedTime": "2016-09-12T17:12:14Z",
-#        "accessLevels": "0000000001",
-#        "adminLastAccessTime": "2016-03-04T18:25:50Z",
-#        "answerType": "1",
-#        "expiresDate": null,
-#        "guidedAssistance": null,
-#        "keywords": null,
-#        "language": "1",
-#        "lastAccessTime": "2016-03-04T18:25:50Z",
-#        "lastNotificationTime": null,
-#        "name": "1",
-#        "nextNotificationTime": null,
-#        "originalReferenceNumber": null,
-#        "positionInList": "1",
-#        "publishOnDate": null,
-#        "question": null,
-#        "solution": "<span style=\"WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: none; FLOAT: none; COLOR: rgb(119,119,119); FONT: 14px\/20px RobotoDraft, 'Helvetica Neue', Calibri, Helvetica, Arial, sans-serif; WIDOWS: 1; DISPLAY: inline !important; LETTER-SPACING: normal; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; -webkit-text-stroke-width: 0px\">Check out our new&#160;2017&#160;products.<\/span><br style=\"WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: none; COLOR: rgb(119,119,119); PADDING-BOTTOM: 0px; PADDING-TOP: 0px; FONT: 14px\/20px RobotoDraft, 'Helvetica Neue', Calibri, Helvetica, Arial, sans-serif; PADDING-LEFT: 0px; WIDOWS: 1; MARGIN: 0px; LETTER-SPACING: normal; PADDING-RIGHT: 0px; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; -webkit-text-stroke-width: 0px\" \/>\n<br style=\"WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: none; COLOR: rgb(119,119,119); PADDING-BOTTOM: 0px; PADDING-TOP: 0px; FONT: 14px\/20px RobotoDraft, 'Helvetica Neue', Calibri, Helvetica, Arial, sans-serif; PADDING-LEFT: 0px; WIDOWS: 1; MARGIN: 0px; LETTER-SPACING: normal; PADDING-RIGHT: 0px; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; -webkit-text-stroke-width: 0px\" \/>\n<a style=\"TEXT-DECORATION: none; WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: none; COLOR: rgb(231,76,60); PADDING-BOTTOM: 0px; PADDING-TOP: 0px; FONT: 14px\/20px RobotoDraft, 'Helvetica Neue', Calibri, Helvetica, Arial, sans-serif; PADDING-LEFT: 0px; WIDOWS: 1; MARGIN: 0px; LETTER-SPACING: normal; PADDING-RIGHT: 0px; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; -webkit-text-stroke-width: 0px\" href=\"http:\/\/oow2016.rightnowdemo.com\/euf\/assets\/html\/smartly\/product-template.html\">Go to the Smartly Store<\/a>\n",
-#        "summary": "SPRING IS ALMOST HERE!",
-#        "updatedByAccount": "16",
-#        "uRL": null
-#    },
-#    {
-#        "id": "2",
-#        "lookupName": "2",
-#        "createdTime": "2016-03-08T19:07:01Z",
-#        "updatedTime": "2016-05-13T14:00:35Z",
-#        "accessLevels": "0000000001",
-#        "adminLastAccessTime": "2016-03-08T19:07:01Z",
-#        "answerType": "3",
-#        "expiresDate": null,
-#        "guidedAssistance": null,
-#        "keywords": null,
-#        "language": "1",
-#        "lastAccessTime": "2017-11-29T21:04:24Z",
-#        "lastNotificationTime": null,
-#        "name": "2",
-#        "nextNotificationTime": null,
-#        "originalReferenceNumber": null,
-#        "positionInList": "1",
-#        "publishOnDate": null,
-#        "question": null,
-#        "solution": null,
-#        "summary": "Maestro Smart Thermostat Installation Guide",
-#        "updatedByAccount": "4",
-#        "uRL": "M2509LW Installation Guide.pdf"
-#    },
-#    {
-#        "id": "3",
-#        "lookupName": "3",
-#        "createdTime": "2016-03-08T19:43:33Z",
-#        "updatedTime": "2016-05-17T16:39:17Z",
-#        "accessLevels": "0000000001",
-#        "adminLastAccessTime": "2016-03-08T19:43:33Z",
-#        "answerType": "1",
-#        "expiresDate": null,
-#        "guidedAssistance": null,
-#        "keywords": null,
-#        "language": "1",
-#        "lastAccessTime": "2016-10-03T14:17:40Z",
-#        "lastNotificationTime": null,
-#        "name": "3",
-#        "nextNotificationTime": null,
-#        "originalReferenceNumber": null,
-#        "positionInList": "1",
-#        "publishOnDate": null,
-#        "question": "<p>Maestro Smart Thermostat App<\/p>\n\n",
-#        "solution": "<p>You will find the Maestro Smart Thermostat App in the Apple App Store or the Google Play store.<\/p>\n<p>Click on the icon to download the app.<\/p>\n<p>&#160;<img border=\"0\" alt=\"Image\" src=\"http:\/\/smartly.rightnowdemo.com\/euf\/assets\/images\/smartlyapp.png\" width=\"49\" height=\"47\" \/><\/p>\n\n",
-#        "summary": "Maestro Smart Thermostat App",
-#        "updatedByAccount": "4",
-#        "uRL": null
-#    }
-#]
-
-```
-
-
-## OSvCPHP\AnalyticsReportsResults
-
-You can create a new instance either by the report 'id' or 'lookupName'.
-
-OSvCPHP\AnalyticsReportsResults only has one function: 'run', which takes an OSvCPHP\Client object.
-
-OSvCPHP\AnalyticsReportsResults have the following properties: 'id', 'lookupName', and 'filters'. More on filters and supported datetime methods are below this OSvCPHP\AnalyticsReportsResults example script.
-
-```php
-require_once('./osvc_php.php');
-
-$rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
-	"demo_site" => true
-));
-
-$last_updated = new OSvCPHP\AnalyticsReportResults(
-	array("lookupName" => "Last Updated By Status")
-);
-
-$results = $last_updated->run($rn_client);
-echo json_encode($results,JSON_PRETTY_PRINT);
-
-#[
-#    {
-#        "Status": "Unresolved",
-#        "Incidents": "793",
-#        "Average Time Since Last Response": "57417609.617582"
-#    },
-#    {
-#        "Status": "Updated",
-#        "Incidents": "462",
-#        "Average Time Since Last Response": "57542462.911111"
-#    }
-#]
-
-```
-
-
-<!-- 
-## Convenience Methods
-
-### 'arrf' => analytics report results filter
-
-'arrf' lets you set filters for an OSvCPHP\AnalyticsReportsResults Object.
-
-You can set the following keys:
-1. name => The filter name
-2. prompt => The prompt for this filter
-
-These are under development, but these should work if you treat them like the the data-type they are as mentioned in the REST API:
-
-3. [attributes](https://docs.oracle.com/cloud/latest/servicecs_gs/CXSVC/op-services-rest-connect-v1.4-analyticsReportResults-post.html#request-definitions-namedIDs-analyticsReports-filters-attributes)
-4. [dataType](https://docs.oracle.com/cloud/latest/servicecs_gs/CXSVC/op-services-rest-connect-v1.4-analyticsReportResults-post.html#request-definitions-namedIDs-analyticsReports-filters-dataType)
-5. [operator](https://docs.oracle.com/cloud/latest/servicecs_gs/CXSVC/op-services-rest-connect-v1.4-analyticsReportResults-post.html#request-definitions-namedIDs-analyticsReports-filters-operator)
-6. [values](https://docs.oracle.com/cloud/latest/servicecs_gs/CXSVC/op-services-rest-connect-v1.4-analyticsReportResults-post.html#request-namedIDs-definitions-analyticsReports-filters-values)
-
-```php
-require 'osc_ruby'
-
-rn_client = OSCRuby::Client.new do |c|
-	c.username = ENV['OSC_ADMIN']
-	c.password = ENV['OSC_PASSWORD']
-	c.interface = ENV['OSC_SITE']	
-end
-
-answers_search = OSCRuby::AnalyticsReportResults.new(id: 176)
-
-keywords = arrf(name: "search_ex", values: "Maestro")
-answers_search.filters << keywords
-
-# To add more filters, create another 
-# "arrf" filter structure
-# and "shovel" it into 
-# the OSCRuby::AnalyticsReportResults
-# "filters" property
-#
-# date_created = arrf(name: "date_created", values: dti("August 7th, 2017"))
-# answers_search.filters << date_created
-
-
-answers = answers_search.run(rn_client)		
-
-answers.each do |answer|
-	puts answer['Summary']
-end			
-
-# =>
-
-# How do I get started with the Maestro Smart Thermostat App?
-
-# Is my Wi-Fi router compatible with the Maestro Smart Thermostat?
-
-# Will the Maestro Smart Thermostat work with my HVAC system?
-
-# Maestro Smart Thermostat App
-
-# Maestro Smart Thermostat Installation Guide
-
-# Maestro Product Warranty
-
-# ... and so on and so forth
-```
-
-
-
-
-
-
-
-### 'dti' => date to iso8601
-
-dti lets you type in a date and get it in ISO8601 format. Explicit date formatting is best.
-
+Here is an example using the client object created in the previous section:
 ```php
 
-dti("January 1st, 2014") # => 2014-01-01T00:00:00-08:00  # => 1200 AM, January First of 2014
-
-dti("January 1st, 2014 11:59PM MDT") # => 2014-01-01T23:59:00-06:00 # => 11:59 PM Mountain Time, January First of 2014
-
-dti("January 1st, 2014 23:59 PDT") # => 2014-01-01T23:59:00-07:00 # => 11:59 PM Pacific Time, January First of 2014
-
-dti("January 1st") # => 2017-01-01T00:00:00-08:00 # => 12:00 AM, January First of this Year
-
-```
-
-
-Be careful! Sometimes the dates will not be what you expect; try to write dates as explicitly/predictably when possible.
-
-
-```php
-
-# EXAMPLES OF DATES NOT BEING WHAT YOU MIGHT EXPECT
-
-#Full dates should be formatted as 
-# %d/%m/%y %h:%m tt
-
-dti("01/02/14") # => 2001-02-14T00:00:00-08:00 # => 12:00 AM, February 14th, 2001
-
-dti("01/02/2014") # => 2014-02-01T00:00:00-08:00 # => 12:00 AM, February 14th, 2014
-
-dti("11:59PM January 1st, 2014 GMT") #=> 2017-08-01T23:59:00-07:00 #=> 11:59 PM, August 1st, 2017 Pacific Time (?)
-
-```
--->
-
-
-
-
-
-
-
-
-## Basic CRUD operations
-
-### CREATE
-```php
-#### OSvCPHP\Connect::post( <client>, <url>, <json_data> )
-#### returns an associative array
-
-require_once('./osvc_php.php');
-
-# Here's how you could create a new ServiceProduct object
-# using PHP variables and arrays to set field information
+require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
     "username" => getenv("OSC_ADMIN"),	
     "password" => getenv("OSC_PASSWORD"),
-    "interface" => getenv("OSC_SITE")	
+    "interface" => getenv("OSC_SITE"),
+    "suppress_rules" => true	
 ));
+
+$options = array(
+	
+	// set the client for the request
+	"client" => $rn_client,
+
+	// Adds a custom header that adds an annotation (CCOM version must be set to "v1.4" or "latest"); limited to 40 characters
+	"annotation" => "Custom annotation",
+
+	// Prints request headers for debugging  
+	"debug" => true,
+
+	// Adds a custom header to excludes null from results; for use with GET requests only                 	 
+	"exclude_null" => true,
+
+	// Number of milliseconds before another HTTP request can be made; this is an anti-DDoS measure
+	"next_request" => 500,
+
+	// Sets 'Accept' header to 'application/schema+json'
+	"schema" => true,
+
+	// Adds a custom header to return results using Coordinated Universal Time (UTC) format for time (Supported on November 2016+
+	"utc_time" => true              	 
+);
+
+```
+
+
+## HTTP Methods
+
+To use various HTTP Methods to return raw response objects, use the "Connect" object
+
+### POST
+```php
+//// OSvCPHP\Connect::post(options)
+//// returns an object
+
+// Here's how you could create a new ServiceProduct object
+// using PHP variables and associative arrays (sort of like JSON)
+
+require __DIR__ . '/vendor/autoload.php';
+
+$rn_client = new OSvCPHP\Client(array(
+	"username" => getenv("OSC_ADMIN"),
+	"password" => getenv("OSC_PASSWORD"),
+	"interface" => getenv("OSC_SITE"),
+));
+
+// JSON object
+// containing data
+// for creating
+// a new product 
 
 $new_product = array(
     'names' => array(
@@ -553,142 +174,565 @@ $new_product = array(
     ),
 );
 
-$post_response = OSvCPHP\Connect::post($rn_client,'/serviceProducts',$new_product);
 
-echo json_encode($post_response['body'],JSON_PRETTY_PRINT); # => JSON body
-echo json_encode($post_response['info'],JSON_PRETTY_PRINT); # => cURL info
+$options = array(
+	"client" => $rn_client,
+	"url" => "serviceProducts",
+	"json" => $new_product,
+	"debug" => true
+);
 
-```
-
-
-### READ
-```php
-#### OSvCPHP\Connect::get( <client>, optional (<url>/<id>/...<params>) )
-#### returns an associative array
-# Here's how you could get a list of ServiceProducts
-
-require_once('./osvc_php.php');
-
-$rn_client = new OSvCPHP\Client(array(
-    "username" => getenv("OSC_ADMIN"),	
-    "password" => getenv("OSC_PASSWORD"),
-    "interface" => getenv("OSC_SITE")	
-));
-
-$get_response = OSvCPHP\Connect::get($rn_client,'/serviceProducts?limit=3');
-echo json_encode($get_response['body'],JSON_PRETTY_PRINT);
-
-#{
-#    "items": [
-#        {
-#            "id": 2,
-#            "lookupName": "Maestro Smart Thermostat",
-#            "links": [
-#                {
-#                    "rel": "canonical",
-#                    "href": "https:\/\/<OSC_SITE>.rightnowdemo.com\/services\/rest\/connect\/v1.3\/serviceProducts\/2"
-#                }
-#            ]
-#        },
-#        {
-#            "id": 6,
-#            "lookupName": "Home Security",
-#            "links": [
-#                {
-#                    "rel": "canonical",
-#                    "href": "https:\/\/<OSC_SITE>.rightnowdemo.com\/services\/rest\/connect\/v1.3\/serviceProducts\/6"
-#                }
-#            ]
-#        },
-#        {
-#            "id": 7,
-#            "lookupName": "Hubs",
-#            "links": [
-#                {
-#                    "rel": "canonical",
-#                    "href": "https:\/\/<OSC_SITE>.rightnowdemo.com\/services\/rest\/connect\/v1.3\/serviceProducts\/7"
-#                }
-#            ]
-#        }
-#    ],
-#    "hasMore": true,
-#
-#	 ... and everything else ... 
-#	
-#}
-
+$post_response = OSvCPHP\Connect::post($options);
 
 ```
 
-
-
-
-
-
-### UPDATE
+### GET
 ```php
-#### OSvCPHP\Connect::patch( <client>, <url>, <json_data> )
-#### returns an associative array
-# Here's how you could update the previously created ServiceProduct object
-# using PHP variables and arrays
-# to set field information
+//// OSvCPHP\Connect::get(options)
+//// returns an object
+// Here's how you could get an instance of ServiceProducts
 
-require_once('./osvc_php.php');
+require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-    "username" => getenv("OSC_ADMIN"),	
-    "password" => getenv("OSC_PASSWORD"),
-    "interface" => getenv("OSC_SITE")	
+	"username" => getenv("OSC_ADMIN"),
+	"password" => getenv("OSC_PASSWORD"),
+	"interface" => getenv("OSC_SITE"),
 ));
 
-$prod_info_to_change = array(
-    "names" => array(
-        "labelText" => "PRODUCT-TEST-updated",
-            "language" => array(
-            "id" => 1
+
+$options = array(
+	"client" => $rn_client,
+	"url" => "serviceProducts/56",
+);
+
+$post_response = OSvCPHP\Connect::get($options);
+```
+
+### PATCH
+```php
+//// OSvCPHP\Connect::patch(options)
+//// returns an object
+// Here's how you could update a Service Product object
+// using JSON objects
+// to set field information
+require __DIR__ . '/vendor/autoload.php';
+
+$rn_client = new OSvCPHP\Client(array(
+	"username" => getenv("OSC_ADMIN"),
+	"password" => getenv("OSC_PASSWORD"),
+	"interface" => getenv("OSC_SITE"),
+));
+
+$updated_product = array(
+    'names' => array(
+        array(
+            'labelText' => 'UPDATED_PRODUCT',
+            'language' => array('id' => 1)
         )
     ),
-    "displayOrder" =>  4,
-    "adminVisibleInterfaces" => array(
-    	array(
-    		"id" => 1
-    	)
+    'displayOrder' => 4,
+    'adminVisibleInterfaces' => array(
+        array(
+            'id' => 1
+        )
     ),
-    "endUserVisibleInterfaces" => array(
-    	array(
-    		"id" => 1
-    	)
+    'endUserVisibleInterfaces' => array(
+        array(
+            'id' => 1
+        )
     ),
 );
 
-$updated_product = OSvCPHP\Connect::patch($rn_client,"serviceProducts/56",$prod_info_to_change); 
 
-echo json_encode($updated_product['info'],JSON_PRETTY_PRINT); # => cURL info
-echo json_encode($updated_product['body'],JSON_PRETTY_PRINT); # => null if successful
+$options = array(
+	"client" => $rn_client,
+	"url" => "serviceProducts/268",
+	"json" => $updated_product,
+);
 
+$patch_response = OSvCPHP\Connect::patch($options);
 ```
-
 
 ### DELETE
 ```php
-#### OSvCPHP\Connect::delete( <client>, <url> )
-#### returns an associative array
-# Here's how you could delete the previously updated ServiceProduct object
-# and OSvCPHP\Connect classes
-
-require_once('./osvc_php.php');
+//// OSvCPHP\Connect::delete(options)
+//// returns an object
+// Here's how you could delete a serviceProduct object
+require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-    "username" => getenv("OSC_ADMIN"),	
-    "password" => getenv("OSC_PASSWORD"),
-    "interface" => getenv("OSC_SITE")
+	"username" => getenv("OSC_ADMIN"),
+	"password" => getenv("OSC_PASSWORD"),
+	"interface" => getenv("OSC_SITE"),
 ));
 
-$delete_response = OSvCPHP\Connect::delete($rn_client,'/serviceProducts/233');
+$options = array(
+	"client" => $rn_client,
+	"url" => "serviceProducts/56",
+);
 
-echo json_encode($updated_product['info'],JSON_PRETTY_PRINT); # => cURL info
-echo json_encode($updated_product['body'],JSON_PRETTY_PRINT); # => null if successful
+$delete_response = OSvCPHP\Connect::delete($options);
 
+```
+### OPTIONS
+```php
+//// OSvCPHP\Connect::options(options)
+//// returns headers object or a raw Response object on error
+// Here's how you can fetch options for incidents
+require __DIR__ . '/vendor/autoload.php';
+
+$rn_client = new OSvCPHP\Client(array(
+	"username" => getenv("OSC_ADMIN"),
+	"password" => getenv("OSC_PASSWORD"),
+	"interface" => getenv("OSC_SITE"),
+));
+
+$options = array(
+	"client" => $rn_client,
+	"url" => "incidents",
+);
+
+$options_response = OSvCPHP\Connect::options($options);
+
+```
+
+## Uploading File Attachments
+In order to upload a file attachment, add a "files" property to your options object with an array as it's value. In that array, input the file locations of the files that you wish to upload relative to where the script is ran.
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+$rn_client = new OSvCPHP\Client(array(
+	"username" => getenv("OSC_ADMIN"),
+	"password" => getenv("OSC_PASSWORD"),
+	"interface" => getenv("OSC_SITE"),
+));
+
+$options = array(
+    "client" => $rn_client,
+    "url" => "incidents",
+    "json" =>  array(
+        "primaryContact"=>  array(
+            "id"=>  2
+        ),
+        "subject"=>  "FishPhone not working"
+    ), "files" => array(
+        "./test.php",
+    )
+);
+
+$post_response = OSvCPHP\Connect::post($options);
+
+```
+
+## Downloading File Attachments
+In order to download a file attachment, add a "?download" query parameter to the file attachment URL and send a get request using the OSvCPHP\Connect.get method. The file will be downloaded to the same location that the script is ran.
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+$rn_client = new OSvCPHP\Client(array(
+	"username" => getenv("OSC_ADMIN"),
+	"password" => getenv("OSC_PASSWORD"),
+	"interface" => getenv("OSC_SITE"),
+));
+
+$options = array(
+    "client" => $rn_client,
+    "url" => '/incidents/25872/fileAttachments/417?download'
+);
+
+$get_response = OSvCPHP\Connect::get($options); // returns 1 on success
+
+```
+
+In order to download multiple attachments for a given object, add a "?download" query parameter to the file attachments URL and send a get request using the OSvCPHP\Connect.get method. 
+
+All of the files for the specified object will be downloaded and archived in a .tgz file.
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+$rn_client = new OSvCPHP\Client(array(
+	"username" => getenv("OSC_ADMIN"),
+	"password" => getenv("OSC_PASSWORD"),
+	"interface" => getenv("OSC_SITE"),
+));
+
+$options = array(
+    "client" => $rn_client,
+    "url" => '/incidents/25872/fileAttachments?download'
+);
+
+$get_response = OSvCPHP\Connect::get($options); // returns 1 on success
+
+```
+
+You can extract the file using [tar](https://askubuntu.com/questions/499807/how-to-unzip-tgz-file-using-the-terminal/499809#499809)
+    
+	$ tar -xvzf ./downloadedAttachment.tgz
+
+## OSvCPHP\QueryResults example
+
+This is for running one ROQL query. Whatever is allowed by the REST API (limits and sorting) is allowed with this library.
+
+OSvCPHP\QueryResults only has one function: 'query', which takes an OSvCPHP\Client object and string query (example below).
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+$rn_client = new OSvCPHP\Client(array(
+	"username" => getenv("OSC_ADMIN"),
+	"password" => getenv("OSC_PASSWORD"),
+	"interface" => getenv("OSC_SITE"),
+));
+
+$options = array(
+	"query" => "DESCRIBE CONTACTS",
+	"client" => $rn_client
+);
+
+$q = new OSvCPHP\QueryResults;
+
+$results = $q->query($options);
+
+
+```
+## OSvCPHP\QueryResultsSet example
+
+This is for running multiple queries and assigning the results of each query to a key for further manipulation.
+
+OSvCPHP\QueryResultsSet only has one function: 'query_set', which takes an OSvCPHP\Client object and multiple query hashes (example below).
+
+```php
+// Pass in each query into a hash
+// set query: to the query you want to execute
+// set key: to the value you want the results to of the query to be referenced to
+require __DIR__ . '/vendor/autoload.php';
+
+$rn_client = new OSvCPHP\Client(array(
+	"username" => getenv("OSC_ADMIN"),
+	"password" => getenv("OSC_PASSWORD"),
+	"interface" => getenv("OSC_SITE"),
+));
+
+$queries = array(
+	array(
+		"query" => "DESCRIBE ANSWERS",
+		"key" => "answerSchema"
+	),
+ 	array(
+ 		"query" => "SELECT * FROM ANSWERS LIMIT 1",
+ 		"key" => "answers"
+ 	),
+ 	array(
+ 		"query" => "DESCRIBE SERVICECATEGORIES",
+ 		"key" => "categoriesSchema"
+ 	),
+ 	array(
+ 		"query" => "SELECT * FROM SERVICECATEGORIES",
+ 		"key" =>"categories"
+ 	),
+ 	array(
+ 		"query" => "DESCRIBE SERVICEPRODUCTS",
+ 		"key" => "productsSchema"
+ 	),
+ 	array(
+ 		"query" => "SELECT * FROM SERVICEPRODUCTS",
+ 		"key" =>"products"
+ 	)
+);
+
+
+$options = array(
+    "client" => $rn_client,
+    "queries" => $queries
+);
+
+$mq = new OSvCPHP\QueryResultsSet;
+
+$results = $mq->query_set($options);
+
+
+//  Results for "DESCRIBE ANSWERS"
+// 
+//  [
+//   {
+//     "Name": "id",
+//     "Type": "Integer",
+//     "Path": ""
+//   },
+//   {
+//     "Name": "lookupName",
+//     "Type": "String",
+//     "Path": ""
+//   },
+//   {
+//     "Name": "createdTime",
+//     "Type": "String",
+//     "Path": ""
+//   }
+//   ... everything else including customfields and objects...
+// ]
+
+//  Results for "SELECT * FROM ANSWERS LIMIT 1"
+// 
+//  [
+//   {
+//     "id": 1,
+//     "lookupName": 1,
+//     "createdTime": "2016-03-04T18:25:50Z",
+//     "updatedTime": "2016-09-12T17:12:14Z",
+//     "accessLevels": 1,
+//     "adminLastAccessTime": "2016-03-04T18:25:50Z",
+//     "answerType": 1,
+//     "expiresDate": null,
+//     "guidedAssistance": null,
+//     "keywords": null,
+//     "language": 1,
+//     "lastAccessTime": "2016-03-04T18:25:50Z",
+//     "lastNotificationTime": null,
+//     "name": 1,
+//     "nextNotificationTime": null,
+//     "originalReferenceNumber": null,
+//     "positionInList": 1,
+//     "publishOnDate": null,
+//     "question": null,
+//     "solution": "<HTML SOLUTION WITH INLINE CSS>",
+//     "summary": "SPRING IS ALMOST HERE!",
+//     "updatedByAccount": 16,
+//     "uRL": null
+//   }
+// ]
+
+//  Results for "DESCRIBE SERVICECATEGORIES"
+//  
+// [
+// ... skipping the first few ... 
+//  {
+//     "Name": "adminVisibleInterfaces",
+//     "Type": "SubTable",
+//     "Path": "serviceCategories.adminVisibleInterfaces"
+//   },
+//   {
+//     "Name": "descriptions",
+//     "Type": "SubTable",
+//     "Path": "serviceCategories.descriptions"
+//   },
+//   {
+//     "Name": "displayOrder",
+//     "Type": "Integer",
+//     "Path": ""
+//   },
+//   {
+//     "Name": "endUserVisibleInterfaces",
+//     "Type": "SubTable",
+//     "Path": "serviceCategories.endUserVisibleInterfaces"
+//   },
+//   ... everything else include parents and children ...
+// ]
+
+
+//  Results for "SELECT * FROM SERVICECATEGORIES"
+// 
+//  [
+//   {
+//     "id": 3,
+//     "lookupName": "Manuals",
+//     "createdTime": null,
+//     "updatedTime": null,
+//     "displayOrder": 3,
+//     "name": "Manuals",
+//     "parent": 60
+//   },
+//   {
+//     "id": 4,
+//     "lookupName": "Installations",
+//     "createdTime": null,
+//     "updatedTime": null,
+//     "displayOrder": 4,
+//     "name": "Installations",
+//     "parent": 60
+//   },
+//   {
+//     "id": 5,
+//     "lookupName": "Downloads",
+//     "createdTime": null,
+//     "updatedTime": null,
+//     "displayOrder": 2,
+//     "name": "Downloads",
+//     "parent": 60
+//   },
+//   ... you should get the idea by now ...
+// ]
+
+```
+## OSvCPHP\AnalyticsReportsResults
+
+You can create a new instance either by the report 'id' or 'lookupName'.
+
+OSvCPHP\AnalyticsReportsResults only has one function: 'run', which takes an OSvCPHP\Client object.
+
+Pass in the 'id', 'lookupName', and 'filters' in the options data object to set the report and any filters. 
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+$rn_client = new OSvCPHP\Client(array(
+	"username" => getenv("OSC_ADMIN"),
+	"password" => getenv("OSC_PASSWORD"),
+	"interface" => getenv("OSC_SITE"),
+));
+
+$options = array(
+	"client" => $rn_client,
+	"json" => array(
+		"filters" => array(
+			array(
+				"name" => "search_ex",
+				"values" => array("returns")
+			)
+    	),
+    	"limit" => 2,
+    	"id" => 176
+	)
+);
+
+$arr = new OSvCPHP\AnalyticsReportResults;
+
+$arrResults = $arr->run($options);
+
+```
+
+## Bulk Delete
+This library makes it easy to use the Bulk Delete feature within the latest versions of the REST API. 
+
+You can either use a QueryResults or QueryResultsSet object in order to run bulk delete queries.
+
+Before you can use this feature, make sure that you have the [correct permissions set up for your profile](https://docs.oracle.com/en/cloud/saas/service/18b/cxsvc/c_osvc_bulk_delete.html#BulkDelete-10689704__concept-212-37785F91).
+
+Here is an example of the how to use the Bulk Delete feature: 
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+$rn_client = new OSvCPHP\Client(array(
+	"username" => getenv("OSC_ADMIN"),
+	"password" => getenv("OSC_PASSWORD"),
+	"interface" => getenv("OSC_SITE"),
+	"version" => "latest"
+));
+
+$options = array(
+	"client" => $rn_client,
+	"query" => "DELETE FROM INCIDENTS LIMIT 10",
+	"annotation" => "Delete example"
+);
+
+$q = new OSvCPHP\QueryResults;
+
+$results = $q->query($options);
+```
+
+## Running multiple ROQL Queries in parallel
+Instead of running multiple queries with 1 GET request, you can run multiple GET requests and combine the results by adding a "parallel" property to the options object
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+$rn_client = new OSvCPHP\Client(array(
+	"username" => getenv("OSC_ADMIN"),
+	"password" => getenv("OSC_PASSWORD"),
+	"interface" => getenv("OSC_SITE"),
+));
+
+$queries = array(
+    array(
+        "query" => "DESCRIBE INCIDENTS",
+        "key" => "incidents"
+    ),
+    array(
+        "query" => "DESCRIBE SERVICEPRODUCTS",
+        "key" => "serviceProducts"
+    ),
+);
+
+$options = array(
+    "client" => $rn_client,
+    "queries" => $queries,
+    "parallel" => true
+);
+
+$mq = new OSvCPHP\QueryResultsSet;
+
+$results = $mq->query_set($options);
+```
+
+
+## Performing Session Authentication
+
+1. Create a custom script with the following code and place in the "Custom Scripts" folder in the File Manager:
+
+```php
+<?php
+
+// Find our position in the file tree
+if (!defined('DOCROOT')) {
+$docroot = get_cfg_var('doc_root');
+define('DOCROOT', $docroot);
+}
+ 
+/************* Agent Authentication ***************/
+ 
+// Set up and call the AgentAuthenticator
+require_once (DOCROOT . '/include/services/AgentAuthenticator.phph');
+
+// get username and password
+$username = $_GET['username'];
+$password = $_GET['password'];
+ 
+// On failure, this includes the Access Denied page and then exits,
+// preventing the rest of the page from running.
+echo json_encode(AgentAuthenticator::authenticateCredentials($username,$password));
+
+```
+2. Create a php script similar to the following and it should connect:
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+// initialize a curl request
+$ch = curl_init(); 
+// set the base of the url
+$url = "https://". getenv('OSC_SITE') .".custhelp.com/cgi-bin/"
+// add the location of the above file
+$url .= getenv('OSC_CONFIG') .".cfg/php/custom/login_test.php"
+// add the credentials for getting a session ID
+$url .= "?username=". getenv('OSC_ADMIN') ."&password=". getenv('OSC_PASSWORD');
+// set the URL
+curl_setopt($ch, CURLOPT_URL, "$url"); 
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+// execute
+$output = curl_exec($ch); 
+// close curl
+curl_close($ch);      
+
+$session_id = json_decode($output)->session_id;
+
+$rn_client = new OSvCPHP\Client(array(
+    "session" => $session_id,
+	"interface" => getenv("OSC_SITE"),
+));
+
+$options = array(
+    "client" => $rn_client,
+    "query" => "SELECT * FROM INCIDENTS LIMIT 10"
+);
+
+$mq = new OSvCPHP\QueryResults();
+
+$results = $mq->query($options);
+
+echo json_encode($results, JSON_PRETTY_PRINT);
 ```
 
 ## License

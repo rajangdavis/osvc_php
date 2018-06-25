@@ -38,8 +38,8 @@ class Config
 			return "Basic " . self::_hidden_credentials($config_hash['username'] .":". $config_hash['password'] );
 		}
 
-		if(isset($config_hash['session_id'])){
-			return "Session " . $config_hash['session_id'];
+		if(isset($config_hash['session'])){
+			return "Session " . $config_hash['session'];
 		}
 
 		if(isset($config_hash['oauth'])){

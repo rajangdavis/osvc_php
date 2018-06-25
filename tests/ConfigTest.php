@@ -168,14 +168,14 @@ final class ConfigTest extends TestCase
 	{
 
 		$options = array(
-			"session_id" => "session_id_for_authentication",
+			"session" => "session_for_authentication",
 			"interface" => "interface789",
 		);
 
 		$config = new OSvCPHP\Config($options);
 
 
-		$this->assertEquals("Session session_id_for_authentication",$config->auth_header);
+		$this->assertEquals("Session session_for_authentication",$config->auth_header);
 
 
 	}
