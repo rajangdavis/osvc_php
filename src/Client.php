@@ -34,14 +34,14 @@ namespace OSvCPHP{
 
 			if(!isset($config_hash['username']) && isset($config_hash['password'])){
 
-				$err = "Username is set but password is not.";
+				$err = "Password is set but username is not.";
 				$example = CLIENT_NO_USERNAME_SET_EXAMPLE;
 				return Validations::custom_error($err,$example);
 			}
 
 			if(!isset($config_hash['password']) && isset($config_hash['username'])){
 
-				$err = "Password is set but username is not.";
+				$err = "Username is set but password is not.";
 				$example = CLIENT_NO_PASSWORD_SET_EXAMPLE;
 				return Validations::custom_error($err,$example);
 			}
