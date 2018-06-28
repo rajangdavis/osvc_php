@@ -77,7 +77,7 @@ class Connect extends Client
 	private static function _check_annotation($options, $headers)
 	{
 		if(preg_match('/v1\.4|latest/', $options['client']->config->base_url) && !isset($options['annotation']) ){
-			$err = "Annotation must be set";
+			$err = "Annotation must be set when using CCOM version 'v1.4' or newer";
 			$example = NO_ANNOTATION_EXAMPLE;
 
 			return Validations::custom_error($err,$example);
