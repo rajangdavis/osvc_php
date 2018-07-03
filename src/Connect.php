@@ -54,6 +54,7 @@ class Connect extends Client
 	static function _init_curl($options, $method)
 	{
 		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
 		$url_set_for_curl = self::_set_url($options,$curl);
 		return self::_config_curl($options,$url_set_for_curl,$method);		
 	}

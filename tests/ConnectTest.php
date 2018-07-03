@@ -490,4 +490,25 @@ final class ConnectTest extends TestCase
 		$this->assertArraySubset($headers, array("prefer: exclude-null-properties","osvc-crest-next-request-after: 1000","Accept: application/schema+json","OSvC-CREST-Time-UTC: yes"));
 	}
 
+	public function testShouldFollowRedirectsForJsonSchema()
+	{
+
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSC_ADMIN"),
+			"password" => getenv("OSC_PASSWORD"),
+			"interface" => getenv("OSC_SITE"),
+			"demo_site" => true
+		));
+
+		$options = array(
+			"client" => $rn_client,
+			"url" => "incidents",
+			"schema" => true
+		);
+
+		$results = OSvCPHP\Connect::get($options);
+
+		$this->assertNotEquals($results,null);
+	}
+
 }
