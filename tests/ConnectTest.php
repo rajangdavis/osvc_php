@@ -341,7 +341,7 @@ final class ConnectTest extends TestCase
 
 		$options = array(
 			"client" => $rn_client,
-			"url" => "serviceProducts/268",
+			"url" => "serviceProducts/172",
 			"json" => $updated_product,
 			"debug" => true
 		);

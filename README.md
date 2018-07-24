@@ -41,7 +41,7 @@ The features that work to date are as follows:
 Here are the _spicier_ (more advanced) features:
 
 1. [Bulk Delete](#bulk-delete)
-2. [Running multiple ROQL Queries in parallel](#running-multiple-roql-queries-in-parallel)
+2. [Running multiple ROQL Queries concurrently](#running-multiple-roql-queries-concurrently)
 3. [Performing Session Authentication](#performing-session-authentication)
 
 ## Authentication
@@ -77,8 +77,14 @@ $rn_client = new OSvCPHP\Client(array(
 	# Turns off SSL verification; don't use in production
 	"no_ssl_verify" => true,				# => Defaults to false. 
 	
-	# Let's you supress business rules
+	# Lets you supress business rules
 	"suppress_rules" => true,				# => Defaults to false. 
+
+	# Lets you supress external events
+	"suppress_events" => true,				# => Defaults to false. 
+
+	# Lets you supress external events and business rules
+	"suppress_all" => true,				# => Defaults to false. 
 	
 	# Adds an access token to ensure quality of service
 	"access_token" =>  "My access token" 		
@@ -633,8 +639,8 @@ $q = new OSvCPHP\QueryResults;
 $results = $q->query($options);
 ```
 
-## Running multiple ROQL Queries in parallel
-Instead of running multiple queries with 1 GET request, you can run multiple GET requests and combine the results by adding a "parallel" property to the options object
+## Running multiple ROQL Queries concurrently
+Instead of running multiple queries with 1 GET request, you can run multiple GET requests and combine the results by adding a "concurrent" property to the options object
 
 ```php
 require __DIR__ . '/vendor/autoload.php';
@@ -659,7 +665,7 @@ $queries = array(
 $options = array(
     "client" => $rn_client,
     "queries" => $queries,
-    "parallel" => true
+    "concurrent" => true
 );
 
 $mq = new OSvCPHP\QueryResultsSet;

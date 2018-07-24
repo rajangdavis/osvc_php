@@ -28,7 +28,35 @@ final class ConfigTest extends TestCase
 
 	}
 
+	public function testSuppressEvents()
+	{
+		$options = array(
+			"username" => "admin",
+			"password" => "password",
+			"interface" => "interfaceName",
+			"suppress_events" => true
+		);
 
+		$config = new OSvCPHP\Config($options);
+
+
+		$this->assertEquals(true,$config->suppress_events);
+	}
+
+	public function testSuppressAll()
+	{
+		$options = array(
+			"username" => "admin",
+			"password" => "password",
+			"interface" => "interfaceName",
+			"suppress_all" => true
+		);
+
+		$config = new OSvCPHP\Config($options);
+
+
+		$this->assertEquals(true,$config->suppress_all);
+	}
 
 	/* should always use "https" and "/services/rest/connect" in the url */ 
 

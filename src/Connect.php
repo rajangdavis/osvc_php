@@ -161,7 +161,9 @@ class Connect extends Client
 			array_push($headers,"osvc-crest-api-access-token: " . $options['client']->config->access_token);
 		} 
 
-		if($options['client']->config->suppress_rules) array_push($headers,"OSvC-CREST-Suppress-All : true");
+		if($options['client']->config->suppress_rules) array_push($headers,"OSvC-CREST-Suppress-Rules: true");
+		if($options['client']->config->suppress_events) array_push($headers,"OSvC-CREST-Suppress-ExternalEvents: true");
+		if($options['client']->config->suppress_all) array_push($headers,"OSvC-CREST-Suppress-All: true");
 		
 		$headers = self::_optional_headers($options, $headers);
 		return $headers;

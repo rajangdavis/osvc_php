@@ -15,7 +15,7 @@ class QueryResultsSet extends Client
 		$query_arr = self::_options_and_queries_exist($options);
 		$key_and_query_maps = self::_parse_queries($query_arr);
 
-		$options = self::_parallel_check($options, $key_and_query_maps);
+		$options = self::_concurrent_check($options, $key_and_query_maps);
 
 		if(isset($options["returned"])){
 			return $options["returned"];
@@ -36,17 +36,17 @@ class QueryResultsSet extends Client
 		return self::_match_results_to_keys($keys,$results);
 	}
 
-	private static function _parallel_check($options, $key_and_query_maps){
+	private static function _concurrent_check($options, $key_and_query_maps){
 
 
-		if(isset($options['parallel']) && $options['parallel'] === true){
+		if(isset($options['concurrent']) && $options['concurrent'] === true){
 			
 			$keys = $key_and_query_maps[0];
 			
 			$queries = $key_and_query_maps[1];
 			
 			// Borrowed from
-			// https://stackoverflow.com/questions/9308779/php-parallel-curl-requests
+			// https://stackoverflow.com/questions/9308779/php-concurrent-curl-requests
 
 			$master = curl_multi_init();
 			$curl_arr = array();
@@ -55,7 +55,7 @@ class QueryResultsSet extends Client
 					
 				$new_options = $options;
 				unset($new_options["queries"]);
-				unset($new_options["parallel"]);
+				unset($new_options["concurrent"]);
 				$new_options["url"] = "queryResults?query=" . rawurlencode($queries[$i]);
 				$curl_arr[$i] = OSvCPHP\Connect::_init_curl($new_options, "GET");
 

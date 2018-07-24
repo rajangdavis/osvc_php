@@ -261,7 +261,7 @@ final class QueryResultsSetTest extends TestCase
 		$options = array(
 		    "client" => $rn_client,
 		    "queries" => $queries,
-		    "parallel" => true
+		    "concurrent" => true
 		);
 
 		$mq = new OSvCPHP\QueryResultsSet;

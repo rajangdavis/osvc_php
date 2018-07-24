@@ -70,7 +70,7 @@ final class AnalyticsReportResultsTest extends TestCase
         	"client" => $rn_client,
         	"json" => array(
 	        	"limit" => 2,
-	        	"lookupName" => "Incident Activity"
+	        	"lookupName" => "Answer Search"
         	)
         );
 
