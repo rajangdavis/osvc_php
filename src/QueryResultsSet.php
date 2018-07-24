@@ -92,9 +92,24 @@ class QueryResultsSet extends Client
 	{
 		$results_object = array();
 		foreach ($keys as $index => $key) {
-			$results_object[$key] = $results[$index];
+			if(array_key_exists($key, $results_object)){
+				$results_object[$key] = self::_accumulate($results_object[$key],$results[$index]);
+			}else{
+				$results_object[$key] = $results[$index];
+				
+			}
 		}
 		return (object)$results_object;
+	}
+
+
+	private static function _accumulate($results_object,$objects_to_add)
+	{
+		foreach ($objects_to_add as $object) {
+			array_push($results_object, $object);
+		}
+
+		return $results_object;
 	}
 
 	private static function _parse_queries($query_arr)

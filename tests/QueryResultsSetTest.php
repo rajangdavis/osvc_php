@@ -276,4 +276,41 @@ final class QueryResultsSetTest extends TestCase
 
 	}
 
+	public function testShouldAccumulateIfMultipleQueriesHaveTheSameKey()
+	{
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSC_ADMIN"),
+			"password" => getenv("OSC_PASSWORD"),
+			"interface" => getenv("OSC_SITE"),
+			"demo_site" => true
+		));
+
+		$queries = array(
+		    array(
+		        "query" => "SELECT ID FROM INCIDENTS Limit 20000",
+		        "key" => "incidents"
+		    ),
+		    array(
+		        "query" => "SELECT ID FROM INCIDENTS Limit 20000 OFFSET 20000",
+		        "key" => "incidents"
+		    ),
+		);
+
+
+		$options = array(
+		    "client" => $rn_client,
+		    "queries" => $queries,
+		    "concurrent" => true
+		);
+
+		$mq = new OSvCPHP\QueryResultsSet;
+
+		$results = $mq->query_set($options);
+
+
+		$this->assertInternalType('object',$results);
+		$this->assertInternalType('array',$results->incidents);
+		$this->assertGreaterThan(20000, sizeof($results->incidents));
+	}
+
 }
