@@ -20,7 +20,7 @@ class Config
 		if(isset($config_hash['demo_site']) && $config_hash['demo_site'] === true){
 			$base_url .= "rightnowdemo.com/services/rest/connect/";
 		}else{
-			$base_url .= "custhelp.com/services/rest/connect/";
+			$base_url .= "/services/rest/connect/";
 		}
 
 		if(isset($config_hash['version'])){
