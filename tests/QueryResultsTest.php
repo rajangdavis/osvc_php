@@ -21,10 +21,9 @@ final class QueryResultsTest extends TestCase
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE"),
 		));
 
 		$options = array(
@@ -46,10 +45,9 @@ final class QueryResultsTest extends TestCase
     public function testShouldErrorIfNoQueryIsPresent()
     {
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$options = array(
@@ -67,10 +65,9 @@ final class QueryResultsTest extends TestCase
     public function testShouldErrorIfOptionsIsNotAnAssociativeArray()
     {
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$query = "DESCRIBE CONTACTS";
@@ -84,10 +81,9 @@ final class QueryResultsTest extends TestCase
     public function testShouldCatchAnErrorIfThereIsABadError()
     {
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$options = array(
@@ -105,10 +101,9 @@ final class QueryResultsTest extends TestCase
     public function testShouldReturnARawResponseObjectIfTheDebugOptionIsSetToTrue()
     {
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$options = array(
@@ -128,10 +123,9 @@ final class QueryResultsTest extends TestCase
     public function testShouldReturnARawResponseObjectIfTheDebugOptionIsSetToTrueAndABadRequestIsMade()
     {
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$options = array(

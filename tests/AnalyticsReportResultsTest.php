@@ -13,10 +13,9 @@ final class AnalyticsReportResultsTest extends TestCase
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
         
         $this->assertInstanceOf(
@@ -29,23 +28,22 @@ final class AnalyticsReportResultsTest extends TestCase
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
         
         $options = array(
         	"client" => $rn_client,
         	"json" => array(
-        		"filters" => array(
-        			array(
-        				"name" => "search_ex",
-        				"values" => array("returns")
-        			)
-	        	),
+        		// "filters" => array(
+        		// 	array(
+        		// 		"name" => "search_ex",
+        		// 		"values" => array("returns")
+        		// 	)
+	        	// ),
 	        	"limit" => 2,
-	        	"id" => 176
+	        	"id" => 185
         	)
         );
 
@@ -53,17 +51,16 @@ final class AnalyticsReportResultsTest extends TestCase
 
         $arrResults = $arr->run($options);
 
-        $this->assertEquals(sizeof($arrResults),2);
+        $this->assertEquals(sizeof($arrResults), 2);
     }
 
     public function testShouldTakeAnOptionsObjectWithALookupNameAndMakeAPostRequest()
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
         
         $options = array(
@@ -79,17 +76,16 @@ final class AnalyticsReportResultsTest extends TestCase
         $arrResults = $arr->run($options);
 
         $this->assertArrayNotHasKey("status",$arrResults);
-        $this->assertEquals(sizeof($arrResults),2);
+        $this->assertEquals(sizeof($arrResults), 2);
     }
 
     public function testShouldReturnAnErrorObjectWith400Error()
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
         
         $options = array(
@@ -113,10 +109,9 @@ final class AnalyticsReportResultsTest extends TestCase
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
         
         $options = array(
@@ -133,10 +128,9 @@ final class AnalyticsReportResultsTest extends TestCase
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
         
         $options = array(
@@ -160,10 +154,9 @@ final class AnalyticsReportResultsTest extends TestCase
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
         
         $options = array(

@@ -5,8 +5,18 @@ require_once(dirname(__FILE__) . '/../src/Client.php');
 
 use PHPUnit\Framework\TestCase;
 
+
 final class ConnectTest extends TestCase
 {	
+	// This is to make changes on the same incident
+	// as the tests are ran
+	// public $test_incident_id;
+
+	// public function modifyIncId($new_id)
+	// {
+	// 	$this->$test_incident_id = $new_id;
+	// 	echo "Id has been modified;\n It is now $this->$test_incident_id";
+	// }
 
 // connect.get
 	/* should take a url as a param and make a HTTP GET Request with a response code of 200 and a body of JSON */ 
@@ -15,10 +25,9 @@ final class ConnectTest extends TestCase
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$options = array(
@@ -33,65 +42,6 @@ final class ConnectTest extends TestCase
 		$this->assertObjectHasAttribute("hasMore", $results);
 	}
 
-
-
-//   connect.get download functionality
-
-	/* should download a file if there is a "?download" query parameter */ 
-
-	public function testShouldDownloadAFileIfThereIsADownloadQueryParameter()
-	{
-
-		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
-		));
-
-		$options = array(
-		    "client" => $rn_client,
-		    "url" => '/incidents/25872/fileAttachments/417?download'
-		);
-
-		$get_response = OSvCPHP\Connect::get($options);
-		$this->assertEquals(1, $get_response);
-		$this->assertFileExists("./haQE7EIDQVUyzoLDha2SRVsP415IYK8_ocmxgMfyZaw.png");
-		unlink("./haQE7EIDQVUyzoLDha2SRVsP415IYK8_ocmxgMfyZaw.png");
-		$this->assertFileNotExists("./haQE7EIDQVUyzoLDha2SRVsP415IYK8_ocmxgMfyZaw.png");
-	}
-
-
-
-
-	/* should create a tgz file if there is a "?download" query parameter and multiple files */ 
-
-	public function testShouldCreateATgzFileIfThereIsADownloadQueryParameterAndMultipleFiles()
-	{
-
-		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
-		));
-
-		$options = array(
-		    "client" => $rn_client,
-		    "url" => '/incidents/25872/fileAttachments?download'
-		);
-
-		$get_response = OSvCPHP\Connect::get($options);
-		$this->assertEquals(1, $get_response);
-		$this->assertFileExists("./downloadedAttachment.tgz");
-		unlink("./downloadedAttachment.tgz");
-		$this->assertFileNotExists("./downloadedAttachment.tgz");
-
-
-	}
-
-
-
 //   connect.post
 
 	/* should take a url and debug parameters and make a HTTP POST Request with a response code of 201 and a body of JSON object */ 
@@ -100,10 +50,9 @@ final class ConnectTest extends TestCase
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$new_product = array(
@@ -139,22 +88,18 @@ final class ConnectTest extends TestCase
 		$this->assertEquals($post_response['info']['http_code'], 201);
 		$this->assertArrayHasKey("body", $post_response);
 		$this->assertArrayHasKey("info", $post_response);
-
+		return $post_response['body']->id;
 	}
 
 
 
-
 	/* should take a url as a param and make a HTTP POST Request and return a JSON object */ 
-
 	public function testShouldTakeAUrlAsAParamAndMakeAHTTPPOSTRequestAndReturnAJSONObject()
 	{
-
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$new_product = array(
@@ -188,7 +133,6 @@ final class ConnectTest extends TestCase
 
 		$this->assertObjectHasAttribute("id", $post_response);
 		$this->assertObjectHasAttribute("lookupName", $post_response);
-
 	}
 
 
@@ -201,10 +145,9 @@ final class ConnectTest extends TestCase
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$options = array(
@@ -212,7 +155,7 @@ final class ConnectTest extends TestCase
 		    "url" => "incidents",
 		    "json" =>  array(
 		        "primaryContact"=>  array(
-		            "id"=>  2
+		            "id"=>  8
 		        ),
 		        "subject"=>  "FishPhone not working"
 		    ), "files" => array(
@@ -232,19 +175,14 @@ final class ConnectTest extends TestCase
 	}
 
 
-
-
 	/* should upload multiple files */ 
 
 	public function testShouldUploadMultipleFiles()
 	{
-
-
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$options = array(
@@ -252,7 +190,7 @@ final class ConnectTest extends TestCase
 		    "url" => "incidents",
 		    "json" =>  array(
 		        "primaryContact"=>  array(
-		            "id"=>  2
+		            "id"=>  8
 		        ),
 		        "subject"=>  "FishPhone not working"
 		    ), "files" => array(
@@ -268,9 +206,34 @@ final class ConnectTest extends TestCase
 
 		$get_response = OSvCPHP\Connect::get($options);
 		$this->assertEquals(2, sizeof($get_response->items));
+		return $post_response->id;
 	}
 
+	/* should create a tgz file if there is a "?download" query parameter and multiple files */ 
+	/**
+	* @depends testShouldUploadMultipleFiles
+	*/
+	public function testShouldCreateATgzFileIfThereIsADownloadQueryParameterAndMultipleFiles($test_incident_id)
+	{
 
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
+		));
+
+		$options = array(
+		    "client" => $rn_client,
+		    "url" => "/incidents/$test_incident_id/fileAttachments?download"
+		);
+
+		$get_response = OSvCPHP\Connect::get($options);
+		echo json_encode($get_response, JSON_PRETTY_PRINT);
+		$this->assertEquals(1, $get_response);
+		$this->assertFileExists("./downloadedAttachment.tgz");
+		unlink("./downloadedAttachment.tgz");
+		$this->assertFileNotExists("./downloadedAttachment.tgz");
+	}
 
 	/**
      * @expectedException Exception
@@ -281,10 +244,9 @@ final class ConnectTest extends TestCase
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$options = array(
@@ -292,7 +254,7 @@ final class ConnectTest extends TestCase
 		    "url" => "incidents",
 		    "json" =>  array(
 		        "primaryContact"=>  array(
-		            "id"=>  2
+		            "id"=>  8
 		        ),
 		        "subject"=>  "FishPhone not working"
 		    ), "files" => array(
@@ -307,41 +269,26 @@ final class ConnectTest extends TestCase
 //   connect.patch
 
 	/* should take a url as a param and make a HTTP PATCH Request with a response code of 201 and an empty body */ 
-
-	public function testShouldTakeAUrlAsAParamAndMakeAHTTPPATCHRequestWithAResponseCodeOf201AndAnEmptyBody()
+	/**
+	* @depends testShouldUploadMultipleFiles
+	*/
+	public function testShouldTakeAUrlAsAParamAndMakeAHTTPPATCHRequestWithAResponseCodeOf201AndAnEmptyBody($test_incident_id)
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$updated_product = array(
-		    'names' => array(
-		        array(
-		            'labelText' => 'UPDATED_PRODUCT',
-		            'language' => array('id' => 1)
-		        )
-		    ),
-		    'displayOrder' => 4,
-		    'adminVisibleInterfaces' => array(
-		        array(
-		            'id' => 1
-		        )
-		    ),
-		    'endUserVisibleInterfaces' => array(
-		        array(
-		            'id' => 1
-		        )
-		    ),
+		    'subject' => "UPDATED SUBJECT"
 		);
 
 
 		$options = array(
 			"client" => $rn_client,
-			"url" => "serviceProducts/172",
+			"url" => "incidents/$test_incident_id",
 			"json" => $updated_product,
 			"debug" => true
 		);
@@ -357,25 +304,26 @@ final class ConnectTest extends TestCase
 //   connect.delete
 
 	/* should take a url as a param and make a HTTP DELETE Request with a response code of 404 because the incident with ID of 0 does not exist */ 
-
-	public function testShouldTakeAUrlAsAParamAndMakeAHTTPDELETERequestWithAResponseCodeOf404BecauseTheIncidentWithIDOf0DoesNotExist()
+	/**
+	* @depends testShouldUploadMultipleFiles
+	*/
+	public function testShouldTakeAUrlAsAParamAndMakeAHTTPDELETERequest($test_incident_id)
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$options = array(
 			"client" => $rn_client,
-			"url" => "serviceProducts/0",
+			"url" => "incidents/$test_incident_id",
 			"debug" => true
 		);
 
 		$delete_response = OSvCPHP\Connect::delete($options);
-		$this->assertEquals($delete_response['info']['http_code'], 404);
+		$this->assertEquals($delete_response['info']['http_code'], 200);
 
 	}
 
@@ -387,10 +335,9 @@ final class ConnectTest extends TestCase
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$options = array(
@@ -415,9 +362,9 @@ final class ConnectTest extends TestCase
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => "OSC_ADMIN",
-			"password" => "OSC_PASSWORD",
-			"interface" => "OSC_SITE",
+			"username" => "OSVC_ADMIN",
+			"password" => "OSVC_PASSWORD",
+			"interface" => "OSVC_SITE",
 			"version" => "v1.4"
 		));
 
@@ -443,9 +390,9 @@ final class ConnectTest extends TestCase
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE"),
 			"version" => "v1.4"
 		));
 
@@ -466,9 +413,9 @@ final class ConnectTest extends TestCase
 	public function testShouldBeAbleToSetOptionalHeaders()
 	{
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => "OSC_ADMIN",
-			"password" => "OSC_PASSWORD",
-			"interface" => "OSC_SITE",
+			"username" => "OSVC_ADMIN",
+			"password" => "OSVC_PASSWORD",
+			"interface" => "OSVC_SITE",
 			"version" => "v1.4"
 		));
 
@@ -494,10 +441,9 @@ final class ConnectTest extends TestCase
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$options = array(

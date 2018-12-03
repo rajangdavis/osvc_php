@@ -22,10 +22,9 @@ final class QueryResultsSetTest extends TestCase
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$queries = array(
@@ -63,10 +62,9 @@ final class QueryResultsSetTest extends TestCase
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$queries = array(
@@ -103,10 +101,9 @@ final class QueryResultsSetTest extends TestCase
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 
@@ -131,10 +128,9 @@ final class QueryResultsSetTest extends TestCase
 
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$queries = array(
@@ -164,10 +160,9 @@ final class QueryResultsSetTest extends TestCase
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$queries = array(
@@ -205,10 +200,9 @@ final class QueryResultsSetTest extends TestCase
 
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$queries = array(
@@ -240,10 +234,9 @@ final class QueryResultsSetTest extends TestCase
 	{
 
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$queries = array(
@@ -279,10 +272,9 @@ final class QueryResultsSetTest extends TestCase
 	public function testShouldAccumulateIfMultipleQueriesHaveTheSameKey()
 	{
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
 		$queries = array(

@@ -11,10 +11,9 @@ final class ClientTest extends TestCase
     {
 		
 		$rn_client = new OSvCPHP\Client(array(
-			"username" => getenv("OSC_ADMIN"),
-			"password" => getenv("OSC_PASSWORD"),
-			"interface" => getenv("OSC_SITE"),
-			"demo_site" => true
+			"username" => getenv("OSVC_ADMIN"),
+			"password" => getenv("OSVC_PASSWORD"),
+			"interface" => getenv("OSVC_SITE")
 		));
 
         $this->assertInstanceOf(
@@ -86,7 +85,6 @@ final class ClientTest extends TestCase
 			"username" => "Admin",
 			"password" => "Admin Password",
 			"interface" => "interface",
-			"demo_site" => true,
 			"no_ssl_verify" => true,
 			"suppress_rules" => true,
 		));
