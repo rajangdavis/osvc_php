@@ -25,7 +25,7 @@ namespace OSvCPHP{
 		private function _validate_config_hash($config_hash)
 		{
 			
-			if(!isset($config_hash['interface'])){
+			if(!isset($config_hash['interface']) && !isset($config_hash['custom_domain'])){
 
 				$err = "Client interface cannot be undefined.";
 				$example = CLIENT_NO_INTERFACE_SET_EXAMPLE;

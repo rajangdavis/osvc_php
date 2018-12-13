@@ -13,15 +13,36 @@ class Config
 		return base64_encode($credential_string);
 	}
 
+
+	private function _demo_check($config_hash)
+	{
+		if(isset($config_hash['demo_site']) && $config_hash['demo_site'] === true){
+			return "rightnowdemo.com/services/rest/connect/";
+		}else{
+			return "custhelp.com/services/rest/connect/";
+		}
+	}
+
+	private function _create_base_url($config_hash)
+	{
+		
+		$base_url = "https://";
+
+		if(isset($config_hash['interface'])){
+			$base_url .=  $config_hash['interface'] . "." . self::_demo_check($config_hash);
+		}
+		
+		if(isset($config_hash['custom_domain'])){
+			$base_url .= $config_hash['custom_domain'] . "/services/rest/connect/";
+		}
+		
+		return $base_url;
+		
+	}
+
 	private function _client_url($config_hash)
 	{
-		$base_url = "https://" . $config_hash['interface'] . ".";
-
-		if(isset($config_hash['demo_site']) && $config_hash['demo_site'] === true){
-			$base_url .= "rightnowdemo.com/services/rest/connect/";
-		}else{
-			$base_url .= "custhelp.com/services/rest/connect/";
-		}
+		$base_url = self::_create_base_url($config_hash);
 
 		if(isset($config_hash['version'])){
 			$base_url .= $config_hash['version'];

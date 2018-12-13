@@ -49,6 +49,31 @@ final class ClientTest extends TestCase
 	}
 
 
+	/* should take "username", "password", and "custom_domain" values and return a config hash with a base_url, and encoded auth_header*/ 
+
+	public function testShouldTakeUsernamePasswordAndCustomDomainValuesFromAndObjectAndMatchThem()
+	{
+
+		$rn_client = new OSvCPHP\Client(array(
+			"username" => "Admin",
+			"password" => "Admin Password",
+			"custom_domain" => "custom.domain.com",
+		));
+
+		// http://djsipe.com/2017/04/21/testing-protected-php-methods-and-properties/
+		$reflection = new \ReflectionClass($rn_client);
+		$property   = $reflection->getProperty('config');
+		$property->setAccessible(true);
+
+		$testable_config = $property->getValue($rn_client);
+
+        $this->assertObjectHasAttribute('auth_header',$testable_config);
+        $this->assertEquals($testable_config->auth_header,"Basic QWRtaW46QWRtaW4gUGFzc3dvcmQ=");
+        $this->assertObjectHasAttribute('base_url', $testable_config);
+        $this->assertEquals($testable_config->base_url,"https://custom.domain.com/services/rest/connect/v1.3/");
+
+	}
+
 
 
 	/* should take a "demo_site" from an object and set a url to use the  */ 

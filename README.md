@@ -61,6 +61,9 @@ $rn_client = new OSvCPHP\Client(array(
 	"password" => getenv("OSC_PASSWORD"),			# => store these in environmental
 	"interface" => getenv("OSC_SITE"),			# => variables in your .bash_profile
 
+	// Custom Domain for custom vhost
+	// "custom_domain" => getenv("OSC_VHOST"),
+
 	// Session Authentication
 	// "session" => <session ID>,
 
