@@ -58,12 +58,12 @@ This is helpful if you need to interact with multiple interfaces or set differen
 require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),			# => These are interface credentials
-	"password" => getenv("OSC_PASSWORD"),			# => store these in environmental
-	"interface" => getenv("OSC_SITE"),			# => variables in your .bash_profile
+	"username" => getenv("OSVC_ADMIN"),			# => These are interface credentials
+	"password" => getenv("OSVC_PASSWORD"),			# => store these in environmental
+	"interface" => getenv("OSVC_SITE"),			# => variables in your .bash_profile
 
 	// Custom Domain for custom vhost
-	// "custom_domain" => getenv("OSC_VHOST"),
+	// "custom_domain" => getenv("OSVC_VHOST"),
 
 	// Session Authentication
 	// "session" => <session ID>,
@@ -106,9 +106,9 @@ Here is an example using the client object created in the previous section:
 require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-    "username" => getenv("OSC_ADMIN"),	
-    "password" => getenv("OSC_PASSWORD"),
-    "interface" => getenv("OSC_SITE"),
+    "username" => getenv("OSVC_ADMIN"),	
+    "password" => getenv("OSVC_PASSWORD"),
+    "interface" => getenv("OSVC_SITE"),
     "suppress_rules" => true	
 ));
 
@@ -154,9 +154,9 @@ To use various HTTP Methods to return raw response objects, use the "Connect" ob
 require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
+	"username" => getenv("OSVC_ADMIN"),
+	"password" => getenv("OSVC_PASSWORD"),
+	"interface" => getenv("OSVC_SITE"),
 ));
 
 // JSON object
@@ -205,9 +205,9 @@ $post_response = OSvCPHP\Connect::post($options);
 require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
+	"username" => getenv("OSVC_ADMIN"),
+	"password" => getenv("OSVC_PASSWORD"),
+	"interface" => getenv("OSVC_SITE"),
 ));
 
 
@@ -229,9 +229,9 @@ $post_response = OSvCPHP\Connect::get($options);
 require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
+	"username" => getenv("OSVC_ADMIN"),
+	"password" => getenv("OSVC_PASSWORD"),
+	"interface" => getenv("OSVC_SITE"),
 ));
 
 $updated_product = array(
@@ -272,9 +272,9 @@ $patch_response = OSvCPHP\Connect::patch($options);
 require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
+	"username" => getenv("OSVC_ADMIN"),
+	"password" => getenv("OSVC_PASSWORD"),
+	"interface" => getenv("OSVC_SITE"),
 ));
 
 $options = array(
@@ -293,9 +293,9 @@ $delete_response = OSvCPHP\Connect::delete($options);
 require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
+	"username" => getenv("OSVC_ADMIN"),
+	"password" => getenv("OSVC_PASSWORD"),
+	"interface" => getenv("OSVC_SITE"),
 ));
 
 $options = array(
@@ -314,9 +314,9 @@ In order to upload a file attachment, add a "files" property to your options obj
 require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
+	"username" => getenv("OSVC_ADMIN"),
+	"password" => getenv("OSVC_PASSWORD"),
+	"interface" => getenv("OSVC_SITE"),
 ));
 
 $options = array(
@@ -343,9 +343,9 @@ In order to download a file attachment, add a "?download" query parameter to the
 require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
+	"username" => getenv("OSVC_ADMIN"),
+	"password" => getenv("OSVC_PASSWORD"),
+	"interface" => getenv("OSVC_SITE"),
 ));
 
 $options = array(
@@ -365,9 +365,9 @@ All of the files for the specified object will be downloaded and archived in a .
 require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
+	"username" => getenv("OSVC_ADMIN"),
+	"password" => getenv("OSVC_PASSWORD"),
+	"interface" => getenv("OSVC_SITE"),
 ));
 
 $options = array(
@@ -393,9 +393,9 @@ OSvCPHP\QueryResults only has one function: 'query', which takes an OSvCPHP\Clie
 require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
+	"username" => getenv("OSVC_ADMIN"),
+	"password" => getenv("OSVC_PASSWORD"),
+	"interface" => getenv("OSVC_SITE"),
 ));
 
 $options = array(
@@ -422,9 +422,9 @@ OSvCPHP\QueryResultsSet only has one function: 'query_set', which takes an OSvCP
 require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
+	"username" => getenv("OSVC_ADMIN"),
+	"password" => getenv("OSVC_PASSWORD"),
+	"interface" => getenv("OSVC_SITE"),
 ));
 
 $queries = array(
@@ -589,9 +589,9 @@ Pass in the 'id', 'lookupName', and 'filters' in the options data object to set 
 require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
+	"username" => getenv("OSVC_ADMIN"),
+	"password" => getenv("OSVC_PASSWORD"),
+	"interface" => getenv("OSVC_SITE"),
 ));
 
 $options = array(
@@ -626,9 +626,9 @@ Here is an example of the how to use the Bulk Delete feature:
 require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
+	"username" => getenv("OSVC_ADMIN"),
+	"password" => getenv("OSVC_PASSWORD"),
+	"interface" => getenv("OSVC_SITE"),
 	"version" => "latest"
 ));
 
@@ -650,9 +650,9 @@ Instead of running multiple queries with 1 GET request, you can run multiple GET
 require __DIR__ . '/vendor/autoload.php';
 
 $rn_client = new OSvCPHP\Client(array(
-	"username" => getenv("OSC_ADMIN"),
-	"password" => getenv("OSC_PASSWORD"),
-	"interface" => getenv("OSC_SITE"),
+	"username" => getenv("OSVC_ADMIN"),
+	"password" => getenv("OSVC_PASSWORD"),
+	"interface" => getenv("OSVC_SITE"),
 ));
 
 $queries = array(
@@ -713,11 +713,11 @@ require __DIR__ . '/vendor/autoload.php';
 // initialize a curl request
 $ch = curl_init(); 
 // set the base of the url
-$url = "https://". getenv('OSC_SITE') .".custhelp.com/cgi-bin/"
+$url = "https://". getenv('OSVC_SITE') .".custhelp.com/cgi-bin/"
 // add the location of the above file
-$url .= getenv('OSC_CONFIG') .".cfg/php/custom/login_test.php"
+$url .= getenv('OSVC_CONFIG') .".cfg/php/custom/login_test.php"
 // add the credentials for getting a session ID
-$url .= "?username=". getenv('OSC_ADMIN') ."&password=". getenv('OSC_PASSWORD');
+$url .= "?username=". getenv('OSVC_ADMIN') ."&password=". getenv('OSVC_PASSWORD');
 // set the URL
 curl_setopt($ch, CURLOPT_URL, "$url"); 
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
@@ -730,7 +730,7 @@ $session_id = json_decode($output)->session_id;
 
 $rn_client = new OSvCPHP\Client(array(
     "session" => $session_id,
-	"interface" => getenv("OSC_SITE"),
+	"interface" => getenv("OSVC_SITE"),
 ));
 
 $options = array(
